@@ -1,14 +1,18 @@
 import "./Register.css";
 import { useNavigate } from "react-router";
-import { Link } from "react-router";
+import { useCallback, useState } from "react";
+import { Link, Navigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import axiosInstance from "../../config/axios";
+import { createUser } from "../../../firebase/auth";
+import { useAuth } from "../../../contexts/authContext";
+import axiosInstance from "../../../config/axios";
 
 type RegisterFormInputs = {
   username: string;
   email: string;
+  password: string;
 };
 
 const validationsSchema = Joi.object<RegisterFormInputs>({
@@ -22,6 +26,9 @@ const validationsSchema = Joi.object<RegisterFormInputs>({
       "string.email": "Invalid email format",
       "string.empty": "Email is required",
     }),
+  password: Joi.string().required().messages({
+    "string.empty": "Password is required",
+  }),
 });
 
 export const Register = () => {
@@ -35,6 +42,23 @@ export const Register = () => {
 
   const navigate = useNavigate();
 
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isRegistering, setIsRegistering] = useState<boolean>(false);
+  const auth = useAuth();
+
+  console.debug(auth);
+
+  const handleRegister = useCallback(async () => {
+    if (!isRegistering) {
+      setIsRegistering(true);
+      await createUser(email, password);
+    }
+  }, [isRegistering, email, password]);
+
+  if (auth?.userLoggedIn) return <Navigate to="/" />;
+
   const onSubmit = async (data: RegisterFormInputs) => {
     const sendData = {
       username: data.username,
@@ -45,7 +69,6 @@ export const Register = () => {
         "http://localhost:3000/api/users",
         sendData
       );
-      //   setStoredUser(response.data.data); CAMBIAR ESTA LINEA Y ADAPTARLA A FIREBASE
       console.debug("User created:", response.data);
       navigate("/tasks");
     } catch (error) {
@@ -66,17 +89,37 @@ export const Register = () => {
 
         <input
           {...register("email")}
+          autoComplete="current-email"
           className="text-input"
           placeholder="Enter email"
+          onBlur={(e) => setEmail(e.target.value)}
         />
         {errors.email && <span>{errors.email.message}</span>}
 
-        <button type="submit" className="submit-button">
+        <input
+          {...register("password")}
+          type={showPassword ? "text" : "password"}
+          autoComplete="current-password"
+          className="text-input"
+          placeholder="Enter password"
+          onBlur={(e) => setPassword(e.target.value)}
+        />
+        {errors.password && <span>{errors.password.message}</span>}
+
+        <button type="button" onClick={() => setShowPassword(!showPassword)}>
+          {showPassword ? "Ocultar" : "Mostrar"}
+        </button>
+
+        <button
+          type="submit"
+          className="submit-button"
+          onClick={handleRegister}
+        >
           Create user
         </button>
       </form>
 
-      <Link to="/tasks">Continue without register any user</Link>
+      <Link to="/login">Already have a user? Login</Link>
     </div>
   );
 };
