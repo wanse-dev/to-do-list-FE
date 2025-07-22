@@ -1,6 +1,6 @@
 import "./Register.css";
 import { useNavigate } from "react-router";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -8,6 +8,7 @@ import Joi from "joi";
 import { createUser } from "../../../firebase/auth";
 import { useAuth } from "../../../contexts/authContext";
 import axiosInstance from "../../../config/axios";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 
 type RegisterFormInputs = {
   username: string;
@@ -42,37 +43,32 @@ export const Register = () => {
 
   const navigate = useNavigate();
 
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const auth = useAuth();
 
   console.debug(auth);
 
-  const handleRegister = useCallback(async () => {
-    if (!isRegistering) {
-      setIsRegistering(true);
-      await createUser(email, password);
-    }
-  }, [isRegistering, email, password]);
-
   if (auth?.userLoggedIn) return <Navigate to="/" />;
 
   const onSubmit = async (data: RegisterFormInputs) => {
-    const sendData = {
-      username: data.username,
-      email: data.email,
-    };
+    setIsRegistering(true);
     try {
+      await createUser(data.email, data.password);
+      const sendData = {
+        username: data.username,
+        email: data.email,
+      };
       const response = await axiosInstance.post(
         "http://localhost:3000/api/users",
         sendData
       );
-      console.debug("User created:", response.data);
+      console.debug("User created in backend:", response.data);
       navigate("/tasks");
     } catch (error) {
-      console.debug("Error creating user:", error);
+      console.error("Error during registration:", error);
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -92,30 +88,29 @@ export const Register = () => {
           autoComplete="current-email"
           className="text-input"
           placeholder="Enter email"
-          onBlur={(e) => setEmail(e.target.value)}
         />
         {errors.email && <span>{errors.email.message}</span>}
 
-        <input
-          {...register("password")}
-          type={showPassword ? "text" : "password"}
-          autoComplete="current-password"
-          className="text-input"
-          placeholder="Enter password"
-          onBlur={(e) => setPassword(e.target.value)}
-        />
+        <div className="password-wrapper">
+          <input
+            {...register("password")}
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            className="text-input password-input"
+            placeholder="Enter password"
+          />
+          <button
+            type="button"
+            className="toggle-password-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+          </button>
+        </div>
         {errors.password && <span>{errors.password.message}</span>}
 
-        <button type="button" onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? "Ocultar" : "Mostrar"}
-        </button>
-
-        <button
-          type="submit"
-          className="submit-button"
-          onClick={handleRegister}
-        >
-          Create user
+        <button type="submit" className="submit-button">
+          {isRegistering ? "Loading..." : "Register"}
         </button>
       </form>
 

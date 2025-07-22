@@ -45,6 +45,32 @@
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
+.register .password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.register .password-input {
+  padding-right: 2.5rem;
+}
+
+.register .toggle-password-icon {
+  position: absolute;
+  top: 55%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.register .toggle-password-icon:hover {
+  color: #d3d3d3;
+}
+
 .register .submit-button {
   padding: 0.75rem;
   color: #fff;

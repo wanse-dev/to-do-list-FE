@@ -1,11 +1,12 @@
 import "./Login.css";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
 import { signIn } from "../../../firebase/auth";
 import { useAuth } from "../../../contexts/authContext";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 
 type RegisterFormInputs = {
   email: string;
@@ -28,71 +29,66 @@ const validationsSchema = Joi.object<RegisterFormInputs>({
 export const Login = () => {
   const {
     register,
+    handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormInputs>({
     resolver: joiResolver(validationsSchema),
   });
 
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const auth = useAuth();
 
   console.debug(auth);
 
-  const handleLogin = useCallback(async () => {
+  const onSubmit = async (data: RegisterFormInputs) => {
+    setIsLoggingIn(true);
     try {
-      if (!isLoggingIn) {
-        setIsLoggingIn(true);
-        await signIn(email, password);
-        setError(null);
-      }
-    } catch (err: any) {
+      await signIn(data.email, data.password);
+      setError(null);
+    } catch (err) {
       setError("Login failed. Check your credentials.");
       console.debug(err);
     } finally {
       setIsLoggingIn(false);
     }
-  }, [password, email, isLoggingIn]);
+  };
 
   if (auth?.userLoggedIn) return <Navigate to="/" />;
 
   return (
     <div className="login">
       <h1>Log in</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleLogin();
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
           {...register("email")}
           autoComplete="current-email"
           className="text-input"
           placeholder="Enter email"
-          onBlur={(e) => setEmail(e.target.value)}
         />
         {errors.email && <span>{errors.email.message}</span>}
 
-        <input
-          {...register("password")}
-          type={showPassword ? "text" : "password"}
-          autoComplete="current-password"
-          className="text-input"
-          placeholder="Enter password"
-          onBlur={(e) => setPassword(e.target.value)}
-        />
+        <div className="password-wrapper">
+          <input
+            {...register("password")}
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            className="text-input password-input"
+            placeholder="Enter password"
+          />
+          <button
+            type="button"
+            className="toggle-password-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+          </button>
+        </div>
         {errors.password && <span>{errors.password.message}</span>}
 
-        <button type="button" onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? "Ocultar" : "Mostrar"}
-        </button>
-
-        <button type="submit" className="submit-button" onClick={handleLogin}>
-          {isLoggingIn ? "Iniciando..." : "Log in"}
+        <button type="submit" className="submit-button">
+          {isLoggingIn ? "Loading..." : "Log in"}
         </button>
         {error && <span style={{ color: "red" }}>{error}</span>}
       </form>
