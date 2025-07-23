@@ -33,6 +33,12 @@ export const Navbar = () => {
 
   useEffect(() => {
     localStorage.setItem("navbarExpanded", JSON.stringify(isExpanded));
+    document.body.style.setProperty(
+      "--current-navbar-width",
+      isExpanded
+        ? "var(--navbar-expanded-width)"
+        : "var(--navbar-collapsed-width)"
+    );
   }, [isExpanded]);
 
   const toggleNavbar = () => setIsExpanded(!isExpanded);
