@@ -88,7 +88,7 @@ export const Login = () => {
         {errors.password && <span>{errors.password.message}</span>}
 
         <button type="submit" className="submit-button">
-          {isLoggingIn ? "Loading..." : "Log in"}
+          {isLoggingIn ? "Logging in..." : "Log in"}
         </button>
         {error && <span style={{ color: "red" }}>{error}</span>}
       </form>

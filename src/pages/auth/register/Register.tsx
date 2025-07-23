@@ -74,7 +74,7 @@ export const Register = () => {
 
   return (
     <div className="register">
-      <h1>Register a new user</h1>
+      <h1>Register your account</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           {...register("username")}
@@ -110,7 +110,7 @@ export const Register = () => {
         {errors.password && <span>{errors.password.message}</span>}
 
         <button type="submit" className="submit-button">
-          {isRegistering ? "Loading..." : "Register"}
+          {isRegistering ? "Creating user..." : "Register"}
         </button>
       </form>
 

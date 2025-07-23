@@ -18,10 +18,3 @@
 .logout-button:active {
   transform: scale(0.98);
 }
-
-@media (max-width: 400px) {
-  .logout-button {
-    padding: 0.6rem;
-    font-size: 0.9rem;
-  }
-}

@@ -2,7 +2,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/authContext/index";
 
-export const LogoutButton = () => {
+export const LogoutButton = ({ children, className }: any) => {
   const { currentUser } = useAuth() || {};
 
   const handleLogout = async () => {
@@ -17,8 +17,8 @@ export const LogoutButton = () => {
   if (!currentUser) return null;
 
   return (
-    <button className="logout-button" onClick={handleLogout}>
-      Cerrar sesión
+    <button className={className} onClick={handleLogout}>
+      {children}
     </button>
   );
 };

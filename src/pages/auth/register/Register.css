@@ -74,7 +74,7 @@
 .register .submit-button {
   padding: 0.75rem;
   color: #fff;
-  background-color: #3f0d19;
+  background-color: #e37b1f;
 
   border: none;
   border-radius: 0.25rem;
@@ -85,7 +85,7 @@
 }
 
 .register .submit-button:hover {
-  background-color: #222;
+  background-color: #854e1d;
 }
 
 .register span {
