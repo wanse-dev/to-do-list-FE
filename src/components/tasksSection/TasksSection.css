@@ -1,0 +1,15 @@
+.tasks-list-section {
+  max-width: min(900px, 65vw);
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px dashed lightblue; /* testing - BORRAR */
+  padding: 1rem; /* testing - BORRAR O MODIFICAR */
+}
+
+@media (max-width: 1150px) {
+  .tasks-list-section {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+}

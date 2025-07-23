@@ -114,7 +114,7 @@ export const Register = () => {
         </button>
       </form>
 
-      <Link to="/login">Already have a user? Login</Link>
+      <Link to="/login">Already have an user? Login</Link>
     </div>
   );
 };

@@ -1,5 +1,26 @@
-.tasks-container {
-    width: 500px;
-    display: flex;
-    justify-content: center;
+.tasks-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.tasks-main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  width: min(max(1200px, 60%), 90%);
+  min-height: 75vh;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1150px) {
+  .tasks-main-content {
+    display: block;
+    width: min(max(1200px, 60%), 90%);
+    margin-inline: auto;
+  }
 }

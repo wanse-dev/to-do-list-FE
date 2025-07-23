@@ -1,0 +1,24 @@
+.header {
+  background-color: #d0d0d0;
+  padding: 1.5rem 2rem;
+  border-left: 6px solid #e37b1f;
+  border-radius: 0.5rem;
+  margin: 1rem 0 2rem 0;
+  color: #1f1f1f;
+  font-family: "Segoe UI", sans-serif;
+
+  width: min(max(1200px, 60%), 90%);
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.header p {
+  font-size: 1rem;
+  color: #444;
+  margin-top: 0.25rem;
+}
