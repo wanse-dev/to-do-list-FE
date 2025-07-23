@@ -41,7 +41,7 @@
 
 .register input:focus {
   outline: none;
-  border-color: #3f0d19;
+  border-color: #e37b1f;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 

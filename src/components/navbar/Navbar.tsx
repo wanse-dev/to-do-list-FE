@@ -69,7 +69,7 @@ export const Navbar = () => {
         <div className="navbar-user">
           <User size={24} />
           {isExpanded && !isMobile && (
-            <span className="navbar-text">User Name</span>
+            <span className="navbar-text">Username</span>
           )}
         </div>
         <LogoutButton className="navbar-item navbar-logout">

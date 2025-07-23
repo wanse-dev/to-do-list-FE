@@ -4,7 +4,7 @@
   --navbar-mobile-height: 60px;
   --navbar-bg-color: #f0f0f0;
   --navbar-text-color: #333;
-  --navbar-hover-color: #e0e0e0;
+  --navbar-hover-color: #e37b1f;
   --navbar-active-color: #d0d0d0;
   --navbar-border-color: #ccc;
 }
@@ -76,7 +76,7 @@
   gap: 1rem;
   color: inherit;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 0 0.5rem 0.5rem 0;
   width: 100%;
   box-sizing: border-box;
   font-size: 1rem;
@@ -90,8 +90,9 @@
 }
 
 .navbar-logout {
-  background: none;
+  background: var(--navbar-active-color);
   border: none;
+  border-radius: 0;
   cursor: pointer;
 }
 
@@ -217,6 +218,12 @@
     justify-content: center;
     align-items: center;
     transform: none;
+    border-radius: 0.5rem;
+  }
+
+  .navbar-link:hover,
+  .navbar-logout:hover {
+    background-color: inherit;
   }
 
   .navbar-text {
@@ -245,5 +252,6 @@
   .navbar-logout {
     min-width: 60px;
     flex: 1;
+    background: none;
   }
 }
