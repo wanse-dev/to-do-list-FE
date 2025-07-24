@@ -9,7 +9,7 @@
   padding: 6rem 1rem;
   box-sizing: border-box;
   background-color: #f5f5f5;
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius);
 }
 
 .login h1 {
@@ -23,7 +23,7 @@
 .login form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--gap-standard);
   width: 100%;
   max-width: 400px;
   margin-bottom: 2rem;
@@ -36,7 +36,7 @@
   width: 100%;
   box-sizing: border-box;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: border-color var(--transition-ease);
 }
 
 .login input:focus {
@@ -64,7 +64,7 @@
   cursor: pointer;
   color: #666;
   padding: 0;
-  transition: color 0.3s ease;
+  transition: color var(--transition-ease);
 }
 
 .login .toggle-password-icon:hover {
@@ -77,11 +77,11 @@
   background-color: #e37b1f;
 
   border: none;
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius);
   cursor: pointer;
   user-select: none;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--transition-ease);
 }
 
 .login .submit-button:hover {

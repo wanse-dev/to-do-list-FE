@@ -1,10 +1,10 @@
 .pomodoro-sidebar {
   max-width: min(400px, 28vw);
   min-width: 0;
-  min-height: 100vh;
+  height: 75vh;
   box-sizing: border-box;
   border: 1px dashed lightcoral; /* testing - BORRAR */
-  padding: 1rem; /* testing - BORRAR O MODIFICAR */
+  padding: var(--padding-standard)
 }
 
 @media (max-width: 1150px) {

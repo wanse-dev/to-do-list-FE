@@ -1,0 +1,7 @@
+.task-card {
+  color: var(--navbar-text-color);
+  font-size: 1.1em;
+  flex-grow: 1;
+  padding-right: 1rem;
+  word-break: break-word;
+}

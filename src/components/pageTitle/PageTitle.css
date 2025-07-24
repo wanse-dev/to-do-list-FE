@@ -1,8 +1,8 @@
 .header {
-  background-color: #d0d0d0;
+  background-color: var(--navbar-active-color);
   padding: 1.5rem 2rem;
   border-left: 6px solid #e37b1f;
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius);
   margin: 1rem 0 2rem 0;
   color: #1f1f1f;
   font-family: "Segoe UI", sans-serif;

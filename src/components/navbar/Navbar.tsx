@@ -44,7 +44,7 @@ export const Navbar = () => {
         `http://localhost:3000/api/users/${firebaseUID}`
       );
       setUsername(response.data.data?.username || "username");
-      console.debug("Data fetched successfully.");
+      console.debug("Username in navbar fetched successfully.");
     } catch (error) {
       if (error instanceof Error) {
         setError(error);
@@ -109,7 +109,7 @@ export const Navbar = () => {
       <div className="navbar-bottom">
         <div className="navbar-user">
           <User size={24} />
-          {loading && "Loading..."}
+          {loading && "..."}
           {error && "Error fetching username"}
           {isExpanded && !isMobile && (
             <span className="navbar-text">{username}</span>

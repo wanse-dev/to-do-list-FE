@@ -25,6 +25,7 @@ export const TasksSection = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<TaskProps>({
     resolver: joiResolver(validationsSchema),
@@ -41,7 +42,6 @@ export const TasksSection = () => {
   const fetchData = async () => {
     try {
       const firebaseUID = auth?.currentUser?.uid;
-      console.debug("Firebase UID:", firebaseUID);
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
@@ -49,7 +49,7 @@ export const TasksSection = () => {
         `http://localhost:3000/api/task/user/${firebaseUID}`
       );
       setData(response.data.data || []);
-      console.debug("Data fetched successfully.");
+      console.debug("Tasks fetched successfully.");
     } catch (error) {
       if (error instanceof Error) {
         setError(error);
@@ -89,6 +89,7 @@ export const TasksSection = () => {
         { firebaseUID, taskId }
       );
       await fetchData();
+      reset();
       console.debug("Task created: ", createResponse.data);
     } catch (error) {
       console.debug("Error creating task: ", error);
@@ -109,7 +110,7 @@ export const TasksSection = () => {
           <button type="submit">
             <CirclePlus size={30} />
           </button>
-          {errors.title && <span>{errors.title.message}</span>}
+          {errors.title && <span>{errors.title.message}</span>} {/* TO-DO: hacer que este error (y todos en general) aparezcan como popup abajo a la derecha*/}
         </form>
       )}
 

@@ -1,8 +1,13 @@
 :root {
-  --current-navbar-width: var(--navbar-expanded-width);
   --navbar-expanded-width: 200px;
   --navbar-collapsed-width: 75px;
   --navbar-mobile-height: 60px;
+  --current-navbar-width: var(--navbar-expanded-width);
+  --border-radius: 0.5rem;
+  --transition-ease: 0.3s ease;
+  --transition-quick: 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  --padding-standard: 1rem;
+  --gap-standard: 1rem;
   --navbar-bg-color: #f0f0f0;
   --navbar-text-color: #333;
   --navbar-hover-color: #e37b1f;
