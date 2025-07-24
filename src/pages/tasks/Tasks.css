@@ -15,6 +15,7 @@
   max-width: min(1200px, 90%);
   min-height: 75vh;
   margin-inline: auto;
+  margin-bottom: 2rem;
   box-sizing: border-box;
 }
 
