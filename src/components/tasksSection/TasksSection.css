@@ -6,6 +6,11 @@
   padding: 1rem; /* testing - BORRAR O MODIFICAR */
 }
 
+.task-card-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 @media (max-width: 1150px) {
   .tasks-list-section {
     width: 100%;

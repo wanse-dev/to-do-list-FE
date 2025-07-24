@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { auth } from "../../firebase/firebase";
 
 interface UserData {
+  uid: string;
   email: string;
   password: string;
 }

@@ -20,7 +20,7 @@ const navItems = [
 
 export const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState(() => {
-    const savedState = localStorage.getItem("navbarExpanded");
+    const savedState = localStorage.getItem("navbarExpanded"); // aprovecho el localStorage para guardar el estado del navbar
     return savedState !== null ? JSON.parse(savedState) : true;
   });
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);

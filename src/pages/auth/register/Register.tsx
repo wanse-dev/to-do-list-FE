@@ -45,6 +45,7 @@ export const Register = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
+  
   const auth = useAuth();
 
   console.debug(auth);
@@ -54,8 +55,9 @@ export const Register = () => {
   const onSubmit = async (data: RegisterFormInputs) => {
     setIsRegistering(true);
     try {
-      await createUser(data.email, data.password);
+      const firebaseUser = await createUser(data.email, data.password);
       const sendData = {
+        firebaseUid: firebaseUser.uid,
         username: data.username,
         email: data.email,
       };
@@ -114,7 +116,7 @@ export const Register = () => {
         </button>
       </form>
 
-      <Link to="/login">Already have an user? Login</Link>
+      <Link to="/login">Already have an user? Sign in</Link>
     </div>
   );
 };
