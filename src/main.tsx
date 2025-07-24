@@ -8,6 +8,7 @@ import { FallBack } from "./pages/fallback/Fallback";
 import { Register } from "./pages/auth/register/Register";
 import { Login } from "./pages/auth/login/Login";
 import { Tasks } from "./pages/tasks/Tasks.tsx";
+import { RecycleBin } from "./pages/recycle_bin/RecycleBin.tsx";
 import { AuthProvider } from "./contexts/authContext/index.tsx";
 
 const router = createBrowserRouter([
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
       {
         path: "/tasks",
         element: <PrivateRoute component={Tasks} />,
+        errorElement: <FallBack />,
+      },
+      {
+        path: "/recycle-bin",
+        element: <PrivateRoute component={RecycleBin} />,
         errorElement: <FallBack />,
       },
     ],

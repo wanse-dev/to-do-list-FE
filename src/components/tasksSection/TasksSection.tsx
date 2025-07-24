@@ -67,9 +67,9 @@ export const TasksSection = () => {
 
   const filteredTasks = data.filter((task) => {
     // filtro la sección con el hook filter, y filtro las tasks que esten activas
-    if (filter === "all" && task.isActive == true) return true;
-    if (filter === "done" && task.isActive == true) return task.isCompleted;
-    if (filter === "undone" && task.isActive == true) return !task.isCompleted;
+    if (filter === "all" && task.isActive) return true;
+    if (filter === "done" && task.isActive) return task.isCompleted;
+    if (filter === "undone" && task.isActive) return !task.isCompleted;
   });
 
   const onSubmit = async (data: TaskProps) => {
@@ -99,7 +99,7 @@ export const TasksSection = () => {
     }
   };
 
-  const OnChange = async (task: TaskProps) => {
+  const toggleTask = async (task: TaskProps) => {
     try {
       const taskId = task._id;
       const endpoint = task.isCompleted
@@ -115,7 +115,7 @@ export const TasksSection = () => {
     }
   };
 
-  const onDisable = async (task: TaskProps) => {
+  const disableTask = async (task: TaskProps) => {
     try {
       const taskId = task._id;
       const response = await axiosInstance.patch(
@@ -165,7 +165,7 @@ export const TasksSection = () => {
             <div key={id} className="task-card-container">
               {filter === "all" && (
                 <div className="task-delete-edit-container">
-                  <button className="delete-button" onClick={() => onDisable(task)}>
+                  <button className="delete-button" onClick={() => disableTask(task)}>
                     <Trash size={15} />
                   </button>
                   <button className="edit-button">
@@ -182,7 +182,7 @@ export const TasksSection = () => {
                 type="checkbox"
                 checked={isCompleted}
                 onChange={() =>
-                  OnChange({
+                  toggleTask({
                     _id: id,
                     title,
                     isActive,
