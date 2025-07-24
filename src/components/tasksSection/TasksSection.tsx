@@ -66,9 +66,10 @@ export const TasksSection = () => {
   }, []);
 
   const filteredTasks = data.filter((task) => {
-    if (filter === "done") return task.isCompleted;
-    if (filter === "undone") return !task.isCompleted;
-    return true; // si no es ni done, ni undone, entonces va a ser "all"
+    // filtro la sección con el hook filter, y filtro las tasks que esten activas
+    if (filter === "all" && task.isActive == true) return true;
+    if (filter === "done" && task.isActive == true) return task.isCompleted;
+    if (filter === "undone" && task.isActive == true) return !task.isCompleted;
   });
 
   const onSubmit = async (data: TaskProps) => {
@@ -114,6 +115,20 @@ export const TasksSection = () => {
     }
   };
 
+  const onDisable = async (task: TaskProps) => {
+    try {
+      const taskId = task._id;
+      const response = await axiosInstance.patch(
+        `http://localhost:3000/api/task/disable/${taskId}`
+      );
+      console.debug("API response:", response.data);
+
+      await fetchData();
+    } catch (error: any) {
+      console.debug("Error disabling task: ", error);
+    }
+  };
+
   return (
     <section className="tasks-list-section">
       <div className="tasks-options">
@@ -150,8 +165,12 @@ export const TasksSection = () => {
             <div key={id} className="task-card-container">
               {filter === "all" && (
                 <div className="task-delete-edit-container">
-                  <button className="delete-button"><Trash size={15} /></button>
-                  <button className="edit-button"><Pen size={15} /></button>
+                  <button className="delete-button" onClick={() => onDisable(task)}>
+                    <Trash size={15} />
+                  </button>
+                  <button className="edit-button">
+                    <Pen size={15} />
+                  </button>
                 </div>
               )}
               <TaskCard
