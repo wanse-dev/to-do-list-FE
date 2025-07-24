@@ -44,7 +44,7 @@ export const Navbar = () => {
         `http://localhost:3000/api/users/${firebaseUID}`
       );
       setUsername(response.data.data?.username || "username");
-      console.debug("Username in navbar fetched successfully.");
+      console.debug("API response:", response.data);
     } catch (error) {
       if (error instanceof Error) {
         setError(error);

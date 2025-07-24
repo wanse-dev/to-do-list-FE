@@ -49,7 +49,7 @@ export const TasksSection = () => {
         `http://localhost:3000/api/task/user/${firebaseUID}`
       );
       setData(response.data.data || []);
-      console.debug("Tasks fetched successfully.");
+      console.debug("API response:", response.data);
     } catch (error) {
       if (error instanceof Error) {
         setError(error);
@@ -79,20 +79,38 @@ export const TasksSection = () => {
     };
     const firebaseUID = auth?.currentUser?.uid;
     try {
-      const createResponse = await axiosInstance.post( // creo un nuevo task
+      const createResponse = await axiosInstance.post(
+        // creo un nuevo task
         "http://localhost:3000/api/task",
         sendData
       );
       const taskId = createResponse.data.data._id;
-      await axiosInstance.patch( // asigno el task al array del usuario autenticado
+      await axiosInstance.patch(
+        // asigno el task al array del usuario autenticado
         `http://localhost:3000/api/task/assignToUser/${firebaseUID}`,
         { firebaseUID, taskId }
       );
       await fetchData();
       reset();
-      console.debug("Task created: ", createResponse.data);
-    } catch (error) {
+      console.debug("API response:", createResponse.data);
+    } catch (error: any) {
       console.debug("Error creating task: ", error);
+    }
+  };
+
+  const OnChange = async (task: TaskProps) => {
+    try {
+      const taskId = task._id;
+      const endpoint = task.isCompleted
+        ? `http://localhost:3000/api/task/undone/${taskId}`
+        : `http://localhost:3000/api/task/complete/${taskId}`;
+
+      const response = await axiosInstance.patch(endpoint);
+      console.debug("API response:", response.data);
+
+      await fetchData();
+    } catch (error: any) {
+      console.debug("Error checking task: ", error);
     }
   };
 
@@ -110,7 +128,8 @@ export const TasksSection = () => {
           <button type="submit">
             <CirclePlus size={30} />
           </button>
-          {errors.title && <span>{errors.title.message}</span>} {/* TO-DO: hacer que este error (y todos en general) aparezcan como popup abajo a la derecha*/}
+          {errors.title && <span>{errors.title.message}</span>}{" "}
+          {/* TO-DO: hacer que este error (y todos en general) aparezcan como popup abajo a la derecha*/}
         </form>
       )}
 
@@ -134,7 +153,18 @@ export const TasksSection = () => {
                 isActive={isActive}
                 isCompleted={isCompleted}
               />
-              <input type="checkbox" name="" id="" />
+              <input
+                type="checkbox"
+                checked={isCompleted}
+                onChange={() =>
+                  OnChange({
+                    _id: id,
+                    title,
+                    isActive,
+                    isCompleted,
+                  })
+                }
+              />
             </div>
           );
         })}

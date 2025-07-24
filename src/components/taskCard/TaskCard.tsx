@@ -9,7 +9,9 @@ type TaskProps = {
 export const TaskCard = (props : TaskProps) => {
   return (
     <div className="task-card">
-      <span>{props.title}</span>
+      <span className={props.isCompleted ? "task-completed" : ""}>
+        {props.title}
+      </span>
     </div>
   );
 };
