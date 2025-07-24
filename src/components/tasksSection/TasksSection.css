@@ -7,6 +7,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-standard);
+
+  transform: translateY(30px);
+  opacity: 0;
+  animation: fadeInContainer 0.8s ease forwards;
 }
 
 .tasks-options {
@@ -92,6 +96,12 @@
   align-items: center;
   padding: 0.5rem 0;
   border-bottom: 1px dashed var(--navbar-border-color);
+
+  position: relative;
+  overflow: hidden;
+
+  /* uso el keyframe de abajo y las variables del root para que tenga animación */
+  animation: fadeInSlideIn var(--animation-duration-task-appear) ease forwards;
 }
 
 .tasks-list-section .task-card-container:first-child {
@@ -132,10 +142,71 @@
   transform: scale(1);
 }
 
+.tasks-list-section .task-delete-edit-container {
+  opacity: 0;
+  transform: translateX(10px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  min-width: 50px;
+  min-height: 25px;
+}
+
+.tasks-list-section .task-delete-edit-container button {
+  all: unset;
+  min-width: 25px;
+  min-height: 25px;
+  transition: transform 0.2s ease;
+}
+
+.tasks-list-section .task-delete-edit-container button:hover {
+  transform: translateX(-2px);
+  cursor: pointer;
+}
+
+.task-card-container:hover .task-delete-edit-container {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
 @media (max-width: 1150px) {
   .tasks-list-section {
     width: 100%;
     max-width: 100%;
     margin-inline: auto;
+  }
+
+  .tasks-list-section .task-delete-edit-container {
+    flex-direction: column;
+    min-width: 25px;
+    min-height: 50px;
+  }
+}
+
+@keyframes fadeInContainer {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

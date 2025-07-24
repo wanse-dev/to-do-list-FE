@@ -6,7 +6,7 @@ import Joi from "joi";
 import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
 import { TaskCard } from "../taskCard/TaskCard";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Trash, Pen } from "lucide-react";
 
 type TaskProps = {
   _id?: string;
@@ -117,9 +117,9 @@ export const TasksSection = () => {
   return (
     <section className="tasks-list-section">
       <div className="tasks-options">
-        <button onClick={() => setFilter("undone")}>Undone</button>
         <button onClick={() => setFilter("all")}>All</button>
         <button onClick={() => setFilter("done")}>Done</button>
+        <button onClick={() => setFilter("undone")}>Undone</button>
       </div>
 
       {filter === "all" && (
@@ -148,6 +148,12 @@ export const TasksSection = () => {
           const isCompleted = task.isCompleted;
           return (
             <div key={id} className="task-card-container">
+              {filter === "all" && (
+                <div className="task-delete-edit-container">
+                  <button className="delete-button"><Trash size={15} /></button>
+                  <button className="edit-button"><Pen size={15} /></button>
+                </div>
+              )}
               <TaskCard
                 title={title}
                 isActive={isActive}

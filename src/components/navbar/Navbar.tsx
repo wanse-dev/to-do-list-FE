@@ -109,7 +109,6 @@ export const Navbar = () => {
       <div className="navbar-bottom">
         <div className="navbar-user">
           <User size={24} />
-          {loading && "..."}
           {error && "Error fetching username"}
           {isExpanded && !isMobile && (
             <span className="navbar-text">{username}</span>
