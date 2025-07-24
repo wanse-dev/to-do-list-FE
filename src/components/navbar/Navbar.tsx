@@ -1,5 +1,7 @@
 import { Link } from "react-router";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../contexts/authContext";
+import axiosInstance from "../../config/axios";
 import {
   Home,
   Timer,
@@ -23,7 +25,36 @@ export const Navbar = () => {
     const savedState = localStorage.getItem("navbarExpanded"); // aprovecho el localStorage para guardar el estado del navbar
     return savedState !== null ? JSON.parse(savedState) : true;
   });
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
+
+  const [username, setUsername] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const auth = useAuth();
+
+  const fetchUsername = async () => {
+    try {
+      const firebaseUID = auth?.currentUser?.uid;
+      if (!firebaseUID) {
+        throw new Error("User is not authenticated");
+      }
+      const response = await axiosInstance.get(
+        `http://localhost:3000/api/users/${firebaseUID}`
+      );
+      setUsername(response.data.data?.username || "username");
+      console.debug("Data fetched successfully.");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error);
+      } else {
+        setError(new Error("Unknown error"));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 800);
@@ -40,6 +71,10 @@ export const Navbar = () => {
         : "var(--navbar-collapsed-width)"
     );
   }, [isExpanded]);
+
+  useEffect(() => {
+    fetchUsername();
+  }, []);
 
   const toggleNavbar = () => setIsExpanded(!isExpanded);
 
@@ -74,8 +109,10 @@ export const Navbar = () => {
       <div className="navbar-bottom">
         <div className="navbar-user">
           <User size={24} />
+          {loading && "Loading..."}
+          {error && "Error fetching username"}
           {isExpanded && !isMobile && (
-            <span className="navbar-text">Username</span>
+            <span className="navbar-text">{username}</span>
           )}
         </div>
         <LogoutButton className="navbar-item navbar-logout">
