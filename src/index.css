@@ -10,7 +10,7 @@
   --animation-duration-task-complete: 0.3s;
   --padding-standard: 1rem;
   --gap-standard: 1rem;
-  --navbar-bg-color: #f0f0f0;
+  --navbar-bg-color: #f4f4f4;
   --navbar-text-color: #333;
   --navbar-hover-color: #e37b1f;
   --navbar-active-color: #d0d0d0;
@@ -22,7 +22,7 @@
 
   color-scheme: light dark;
   color: rgba(36, 36, 36, 0.87);
-  background-color: #eee;
+  background-color: #f8f8f8;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

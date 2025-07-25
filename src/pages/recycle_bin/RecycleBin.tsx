@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
 import { TaskCard } from "../../components/taskCard/TaskCard";
+import { PageTitle } from "../../components/pageTitle/PageTitle";
 import { Undo2, Trash } from "lucide-react";
 
 type TaskProps = {
@@ -79,45 +80,53 @@ export const RecycleBin = () => {
   };
 
   return (
-    <section className="tasks-list-section">
-      <div className="task-cards-wrapper">
-        {error && (
-          <p>
-            {error.name}: {error.message}
-          </p>
-        )}
+    <div className="recycle-bin-page">
+      <PageTitle
+        title="Recycle bin"
+        subtitle="Recover your deleted tasks, or delete them for ever."
+      />
+      <main className="recycle-bin-main-content">
+        <section className="tasks-list-section">
+          <div className="task-cards-wrapper">
+            {error && (
+              <p>
+                {error.name}: {error.message}
+              </p>
+            )}
 
-        {loading && "Loading..."}
-        {disabledTasks.map((task) => {
-          const id = task._id;
-          const title = task.title;
-          const isActive = task.isActive;
-          const isCompleted = task.isCompleted;
-          return (
-            <div key={id} className="task-card-container">
-              <div className="task-recover-delete-container">
-                <button
-                  className="recover-button"
-                  onClick={() => recoverTask(task)}
-                >
-                  <Undo2 size={15} />
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => deleteTask(task)}
-                >
-                  <Trash size={15} />
-                </button>
-              </div>
-              <TaskCard
-                title={title}
-                isActive={isActive}
-                isCompleted={isCompleted}
-              />
-            </div>
-          );
-        })}
-      </div>
-    </section>
+            {loading && "Loading..."}
+            {disabledTasks.map((task) => {
+              const id = task._id;
+              const title = task.title;
+              const isActive = task.isActive;
+              const isCompleted = task.isCompleted;
+              return (
+                <div key={id} className="task-card-container">
+                  <div className="task-recover-delete-container">
+                    <button
+                      className="recover-button"
+                      onClick={() => recoverTask(task)}
+                    >
+                      <Undo2 size={15} />
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => deleteTask(task)}
+                    >
+                      <Trash size={15} />
+                    </button>
+                  </div>
+                  <TaskCard
+                    title={title}
+                    isActive={isActive}
+                    isCompleted={isCompleted}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 };

@@ -1,23 +1,32 @@
 .header {
-  background-color: var(--navbar-active-color);
-  padding: 1.5rem 2rem;
-  border-left: 6px solid #e37b1f;
+  background: linear-gradient(
+    135deg,
+    var(--navbar-active-color) 0%,
+    var(--navbar-bg-color) 100%
+  );
+  padding: var(--padding-standard) calc(var(--padding-standard) * 2);
+  border-left: 6px solid var(--navbar-hover-color);
   border-radius: var(--border-radius);
-  margin: 1rem 0 2rem 0;
-  color: #1f1f1f;
-  font-family: "Segoe UI", sans-serif;
+  margin: calc(var(--gap-standard) * 1.5) 0 calc(var(--gap-standard) * 2) 0;
+  color: var(--navbar-text-color);
+  font-family: var(--font-family);
+  user-select: none;
 
   width: min(max(1200px, 60%), 90%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  position: relative;
+  overflow: hidden;
 }
 
-h1 {
+.title {
   font-size: 2rem;
   font-weight: 600;
   margin: 0;
   letter-spacing: -0.5px;
 }
 
-.header p {
+.subtitle {
   font-size: 1rem;
   color: #444;
   margin-top: 0.25rem;

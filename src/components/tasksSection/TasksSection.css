@@ -30,7 +30,7 @@
   justify-content: center;
   cursor: pointer;
   transition: background-color var(--transition-ease),
-    transform var(--transition-quick);
+    transform var(--transition-quick), color 0.1s;
 }
 
 .tasks-list-section .tasks-options button:first-child {
@@ -149,6 +149,7 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 
   display: flex;
+  flex-direction: row-reverse;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
