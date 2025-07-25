@@ -58,7 +58,6 @@ export const RecycleBin = () => {
         `http://localhost:3000/api/task/enable/${taskId}`
       );
       console.debug("API response:", response.data);
-
       await fetchData();
     } catch (error: any) {
       console.debug("Error enabling task: ", error);
@@ -66,14 +65,26 @@ export const RecycleBin = () => {
   };
 
   const deleteTask = async (task: TaskProps) => {
+    const firebaseUID = auth?.currentUser?.uid;
     try {
+      if (!firebaseUID) {
+        throw new Error("User is not authenticated");
+      }
       const taskId = task._id;
-      const response = await axiosInstance.delete(
+      if (!taskId) {
+        throw new Error("Task ID is missing");
+      }
+      await axiosInstance.patch(
+        `http://localhost:3000/api/task/removeFromUser/${firebaseUID}`,
+        { taskId }
+      );
+      const deleteResponse = await axiosInstance.delete(
         `http://localhost:3000/api/task/${taskId}`
       );
-      console.debug("API response:", response.data);
 
       await fetchData();
+      console.debug("API response:", deleteResponse.data);
+      setError(null);
     } catch (error: any) {
       console.debug("Error deleting task: ", error);
     }
