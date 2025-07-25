@@ -2,6 +2,7 @@ import "./index.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import { AuthProvider } from "./contexts/authContext/index.tsx";
 import PrivateRoute from "./pages/privateRoute/PrivateRoute";
 import { Layout } from "./components/layout/Layout.tsx";
 import { FallBack } from "./pages/fallback/Fallback";
@@ -9,7 +10,6 @@ import { Register } from "./pages/auth/register/Register";
 import { Login } from "./pages/auth/login/Login";
 import { Tasks } from "./pages/tasks/Tasks.tsx";
 import { RecycleBin } from "./pages/recycle_bin/RecycleBin.tsx";
-import { AuthProvider } from "./contexts/authContext/index.tsx";
 
 const router = createBrowserRouter([
   {

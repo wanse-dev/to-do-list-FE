@@ -214,7 +214,7 @@
 
   .navbar-bottom {
     flex-direction: row;
-    margin: 0;
+    margin: 0 calc((100vw - 320px) / 4) 0 0; /*hago este cálculo de margin para que haya simetría en los elementos del navbar mobile*/
     padding: 0;
     border-top: none;
     flex: 1;

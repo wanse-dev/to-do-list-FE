@@ -6,7 +6,7 @@
   --border-radius: 0.5rem;
   --transition-ease: 0.3s ease;
   --transition-quick: 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-  --animation-duration-task-appear: 0.5s;
+  --animation-duration-task-appear: 0.3s;
   --animation-duration-task-complete: 0.3s;
   --padding-standard: 1rem;
   --gap-standard: 1rem;
