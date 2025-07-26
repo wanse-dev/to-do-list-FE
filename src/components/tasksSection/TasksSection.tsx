@@ -26,10 +26,19 @@ const validationsSchema = Joi.object<TaskProps>({
 
 export const TasksSection = () => {
   const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
+    register: registerCreate,
+    handleSubmit: handleCreateSubmit,
+    reset: resetCreate,
+    formState: { errors: createErrors },
+  } = useForm<TaskProps>({
+    resolver: joiResolver(validationsSchema),
+  });
+
+  const {
+    register: registerEdit,
+    handleSubmit: handleEditSubmit,
+    formState: { errors: editErrors },
+    reset: resetEdit,
   } = useForm<TaskProps>({
     resolver: joiResolver(validationsSchema),
   });
@@ -37,8 +46,11 @@ export const TasksSection = () => {
   const [data, setData] = useState<TaskProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | string | null>(null);
+
   const [taskAdded, setTaskAdded] = useState(false);
   const [taskDeleted, setTaskDeleted] = useState(false);
+  const [taskEdited, setTaskEdited] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
   const [filter, setFilter] = useState<"all" | "done" | "undone">("all");
 
@@ -76,8 +88,17 @@ export const TasksSection = () => {
       });
     }
 
-    if (errors.title?.message) {
-      toast.error(errors.title.message, {
+    if (createErrors.title?.message) {
+      toast.error(createErrors.title.message, {
+        position: "bottom-right",
+        autoClose: 2000,
+        pauseOnHover: true,
+        draggable: false,
+      });
+    }
+
+    if (editErrors.title?.message) {
+      toast.error(editErrors.title.message, {
         position: "bottom-right",
         autoClose: 2000,
         pauseOnHover: true,
@@ -104,7 +125,24 @@ export const TasksSection = () => {
       });
       setTaskDeleted(false);
     }
-  }, [error, errors.title, taskAdded, taskDeleted]);
+
+    if (taskEdited) {
+      toast.success("Task updated successfully", {
+        position: "bottom-right",
+        autoClose: 2000,
+        pauseOnHover: true,
+        draggable: false,
+      });
+      setTaskEdited(false);
+    }
+  }, [
+    error,
+    createErrors.title,
+    editErrors.title,
+    taskAdded,
+    taskDeleted,
+    taskEdited,
+  ]);
 
   const filteredTasks = data.filter((task) => {
     if (filter === "all" && task.isActive) return true;
@@ -131,7 +169,7 @@ export const TasksSection = () => {
       );
       setTaskAdded(true);
       await fetchData();
-      reset();
+      resetCreate();
       console.debug("API response:", createResponse.data);
     } catch (error: any) {
       setError(error.message || "Unknown error");
@@ -167,6 +205,23 @@ export const TasksSection = () => {
     }
   };
 
+  const editTask = async (task: TaskProps) => {
+    try {
+      const taskId = task._id;
+      const response = await axiosInstance.patch(
+        `http://localhost:3000/api/task/update/${taskId}`,
+        { title: task.title }
+      );
+      console.debug("API response:", response.data);
+      setTaskEdited(true);
+      setEditingTaskId(null);
+      resetEdit();
+      await fetchData();
+    } catch (error: any) {
+      setError(error.message || "Unknown error");
+    }
+  };
+
   return (
     <section className="tasks-list-section">
       <div className="tasks-options">
@@ -176,8 +231,12 @@ export const TasksSection = () => {
       </div>
 
       {filter === "all" && (
-        <form onSubmit={handleSubmit(onSubmit)} className="task-form">
-          <input {...register("title")} type="text" placeholder="New task..." />
+        <form onSubmit={handleCreateSubmit(onSubmit)} className="task-form">
+          <input
+            {...registerCreate("title")}
+            type="text"
+            placeholder="New task..."
+          />
           <button type="submit">
             <CirclePlus size={30} />
           </button>
@@ -201,16 +260,40 @@ export const TasksSection = () => {
                   >
                     <Trash size={15} />
                   </button>
-                  <button className="edit-button">
+                  <button
+                    className="edit-button"
+                    onClick={() => setEditingTaskId(id || null)}
+                  >
                     <Pen size={15} />
                   </button>
                 </div>
               )}
-              <TaskCard
-                title={title}
-                isActive={isActive}
-                isCompleted={isCompleted}
-              />
+              {editingTaskId === id ? (
+                <form
+                  onSubmit={handleEditSubmit((data) =>
+                    editTask({
+                      _id: id,
+                      title: data.title,
+                      isActive,
+                      isCompleted,
+                    })
+                  )}
+                  className="task-form"
+                >
+                  <input
+                    {...registerEdit("title", { value: title })}
+                    type="text"
+                    className="task-edit-input"
+                    autoFocus
+                  />
+                </form>
+              ) : (
+                <TaskCard
+                  title={title}
+                  isActive={isActive}
+                  isCompleted={isCompleted}
+                />
+              )}
               <input
                 type="checkbox"
                 checked={isCompleted}

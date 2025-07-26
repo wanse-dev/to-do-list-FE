@@ -100,12 +100,10 @@
   position: relative;
   overflow: hidden;
 
-  /* uso el keyframe de abajo y las variables del root para que tenga animación */
   animation: fadeInSlideIn var(--animation-duration-task-appear) ease forwards;
 }
 
 .tasks-list-section .task-card-container:first-child {
-  /* es el primero y no el último, porque tengo el flex-direction en column reverse */
   border-bottom: none;
 }
 
@@ -174,6 +172,17 @@
   opacity: 1;
   transform: translateX(0);
   pointer-events: all;
+}
+
+.tasks-list-section .task-edit-input {
+  all: unset;
+  width: 100%;
+  padding: 0.5rem var(--padding-standard);
+  border-bottom: 1px solid var(--navbar-border-color);
+  box-sizing: border-box;
+  color: var(--navbar-text-color);
+  font-size: 1.1em;
+  background: transparent;
 }
 
 @media (max-width: 1150px) {
