@@ -1,16 +1,15 @@
 import "./PageTitle.css";
-import React from "react";
 
 type PageTitleProps = {
   title: string;
   subtitle: string;
 };
 
-export const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
+export const PageTitle = (props: PageTitleProps) => {
   return (
     <header className="header">
-      <h1 className="title">{title}</h1>
-      <p className="subtitle">{subtitle}</p>
+      <h1 className="title">{props.title}</h1>
+      <p className="subtitle">{props.subtitle}</p>
     </header>
   );
 };

@@ -3,26 +3,9 @@
   font-size: 1.1em;
   flex-grow: 1;
   padding: 0 var(--padding-standard);
-
-  transform: translateY(20px);
-  opacity: 0;
-  animation: slideInUp var(--animation-duration-task-appear) forwards;
 }
 
 .task-card .task-completed {
   text-decoration: line-through;
   opacity: 0.7;
-
-  transition: all var(--animation-duration-task-complete) ease;
-}
-
-@keyframes slideInUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }

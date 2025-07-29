@@ -8,7 +8,7 @@ import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
 import { TaskCard } from "../taskCard/TaskCard";
 import { CirclePlus, Trash, Pen } from "lucide-react";
-
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 
 type TaskProps = {
@@ -149,6 +149,7 @@ export const TasksSection = () => {
     if (filter === "all" && task.isActive) return true;
     if (filter === "done" && task.isActive) return task.isCompleted;
     if (filter === "undone" && task.isActive) return !task.isCompleted;
+    return false;
   });
 
   const onSubmit = async (data: TaskProps) => {
@@ -224,8 +225,13 @@ export const TasksSection = () => {
   };
 
   return (
-    <section className="tasks-list-section">
-      <div className="tasks-options">
+    <motion.section
+      className="tasks-list-section"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      <div className="tasks-options" >
         <button
           className={filter === "all" ? "active-section" : ""}
           onClick={() => setFilter("all")}
@@ -261,71 +267,85 @@ export const TasksSection = () => {
 
       <div className="task-cards-wrapper">
         {loading && "Loading..."}
-        {filteredTasks.map((task) => {
-          const id = task._id;
-          const title = task.title;
-          const isActive = task.isActive;
-          const isCompleted = task.isCompleted;
-          return (
-            <div key={id} className="task-card-container">
-              {filter === "all" && (
-                <div className="task-delete-edit-container">
-                  <button
-                    className="delete-button"
-                    onClick={() => disableTask(task)}
+        <AnimatePresence mode="popLayout">
+          {filteredTasks.map((task) => {
+            const id = task._id;
+            const title = task.title;
+            const isActive = task.isActive;
+            const isCompleted = task.isCompleted;
+            return (
+              <motion.div
+                key={id}
+                className="task-card-container"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{
+                  opacity: 0,
+                  x: -100,
+                  transition: { duration: 0.2 },
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                layout
+              >
+                {filter === "all" && (
+                  <div className="task-delete-edit-container">
+                    <button
+                      className="delete-button"
+                      onClick={() => disableTask(task)}
+                    >
+                      <Trash size={15} />
+                    </button>
+                    <button
+                      className="edit-button"
+                      onClick={() => setEditingTask(task)}
+                    >
+                      <Pen size={15} />
+                    </button>
+                  </div>
+                )}
+                {editingTask?._id === task._id ? (
+                  <form
+                    onSubmit={handleEditSubmit((data) =>
+                      editTask({
+                        _id: id,
+                        title: data.title,
+                        isActive,
+                        isCompleted,
+                      })
+                    )}
+                    className="task-form"
                   >
-                    <Trash size={15} />
-                  </button>
-                  <button
-                    className="edit-button"
-                    onClick={() => setEditingTask(task || null)}
-                  >
-                    <Pen size={15} />
-                  </button>
-                </div>
-              )}
-              {editingTask?._id === task._id ? (
-                <form
-                  onSubmit={handleEditSubmit((data) =>
-                    editTask({
+                    <input
+                      {...registerEdit("title", { value: title })}
+                      type="text"
+                      className="task-edit-input"
+                      autoFocus
+                    />
+                  </form>
+                ) : (
+                  <TaskCard
+                    title={title}
+                    isActive={isActive}
+                    isCompleted={isCompleted}
+                  />
+                )}
+                <input
+                  type="checkbox"
+                  checked={isCompleted}
+                  onChange={() =>
+                    toggleTask({
                       _id: id,
-                      title: data.title,
+                      title,
                       isActive,
                       isCompleted,
                     })
-                  )}
-                  className="task-form"
-                >
-                  <input
-                    {...registerEdit("title", { value: title })}
-                    type="text"
-                    className="task-edit-input"
-                    autoFocus
-                  />
-                </form>
-              ) : (
-                <TaskCard
-                  title={title}
-                  isActive={isActive}
-                  isCompleted={isCompleted}
+                  }
                 />
-              )}
-              <input
-                type="checkbox"
-                checked={isCompleted}
-                onChange={() =>
-                  toggleTask({
-                    _id: id,
-                    title,
-                    isActive,
-                    isCompleted,
-                  })
-                }
-              />
-            </div>
-          );
-        })}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
-    </section>
+    </motion.section>
   );
 };
