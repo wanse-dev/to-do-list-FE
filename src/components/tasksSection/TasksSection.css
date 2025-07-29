@@ -29,6 +29,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-weight: 600;
   transition: background-color var(--transition-ease),
     transform var(--transition-quick), color 0.1s;
 }
@@ -44,6 +45,13 @@
 .tasks-list-section .tasks-options button:hover {
   background-color: var(--navbar-hover-color);
   transform: scale(1.03);
+  font-weight: 400;
+  color: #fff;
+}
+
+.tasks-list-section .tasks-options button.active-section {
+  background-color: var(--navbar-hover-color);
+  font-weight: 400;
   color: #fff;
 }
 

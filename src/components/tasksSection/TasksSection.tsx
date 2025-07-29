@@ -19,8 +19,9 @@ type TaskProps = {
 };
 
 const validationsSchema = Joi.object<TaskProps>({
-  title: Joi.string().required().messages({
+  title: Joi.string().required().max(150).messages({
     "string.empty": "You must type something...",
+    "string.max": "Title must be less than 150 characters.",
   }),
 });
 
@@ -50,7 +51,7 @@ export const TasksSection = () => {
   const [taskAdded, setTaskAdded] = useState(false);
   const [taskDeleted, setTaskDeleted] = useState(false);
   const [taskEdited, setTaskEdited] = useState(false);
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [editingTask, setEditingTask] = useState<TaskProps | null>(null);  
 
   const [filter, setFilter] = useState<"all" | "done" | "undone">("all");
 
@@ -214,7 +215,7 @@ export const TasksSection = () => {
       );
       console.debug("API response:", response.data);
       setTaskEdited(true);
-      setEditingTaskId(null);
+      setEditingTask(null);
       resetEdit();
       await fetchData();
     } catch (error: any) {
@@ -225,9 +226,24 @@ export const TasksSection = () => {
   return (
     <section className="tasks-list-section">
       <div className="tasks-options">
-        <button onClick={() => setFilter("all")}>All</button>
-        <button onClick={() => setFilter("done")}>Done</button>
-        <button onClick={() => setFilter("undone")}>Undone</button>
+        <button
+          className={filter === "all" ? "active-section" : ""}
+          onClick={() => setFilter("all")}
+        >
+          All
+        </button>
+        <button
+          className={filter === "done" ? "active-section" : ""}
+          onClick={() => setFilter("done")}
+        >
+          Done
+        </button>
+        <button
+          className={filter === "undone" ? "active-section" : ""}
+          onClick={() => setFilter("undone")}
+        >
+          Undone
+        </button>
       </div>
 
       {filter === "all" && (
@@ -262,13 +278,13 @@ export const TasksSection = () => {
                   </button>
                   <button
                     className="edit-button"
-                    onClick={() => setEditingTaskId(id || null)}
+                    onClick={() => setEditingTask(task || null)}
                   >
                     <Pen size={15} />
                   </button>
                 </div>
               )}
-              {editingTaskId === id ? (
+              {editingTask?._id === task._id ? (
                 <form
                   onSubmit={handleEditSubmit((data) =>
                     editTask({
