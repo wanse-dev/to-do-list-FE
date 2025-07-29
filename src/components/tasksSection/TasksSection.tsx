@@ -48,10 +48,10 @@ export const TasksSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | string | null>(null);
 
-  const [taskAdded, setTaskAdded] = useState(false);
-  const [taskDeleted, setTaskDeleted] = useState(false);
-  const [taskEdited, setTaskEdited] = useState(false);
-  const [editingTask, setEditingTask] = useState<TaskProps | null>(null);  
+  const [taskAdded, setTaskAdded] = useState<TaskProps | null>(null);
+  const [taskDeleted, setTaskDeleted] = useState<TaskProps | null>(null);
+  const [taskEdited, setTaskEdited] = useState<TaskProps | null>(null);
+  const [editingTask, setEditingTask] = useState<TaskProps | null>(null);
 
   const [filter, setFilter] = useState<"all" | "done" | "undone">("all");
 
@@ -114,7 +114,7 @@ export const TasksSection = () => {
         pauseOnHover: true,
         draggable: false,
       });
-      setTaskAdded(false);
+      setTaskAdded(null);
     }
 
     if (taskDeleted) {
@@ -124,7 +124,7 @@ export const TasksSection = () => {
         pauseOnHover: true,
         draggable: false,
       });
-      setTaskDeleted(false);
+      setTaskDeleted(null);
     }
 
     if (taskEdited) {
@@ -134,7 +134,7 @@ export const TasksSection = () => {
         pauseOnHover: true,
         draggable: false,
       });
-      setTaskEdited(false);
+      setTaskEdited(null);
     }
   }, [
     error,
@@ -168,7 +168,7 @@ export const TasksSection = () => {
         `http://localhost:3000/api/task/assignToUser/${firebaseUID}`,
         { firebaseUID, taskId }
       );
-      setTaskAdded(true);
+      setTaskAdded(createResponse.data.data);
       await fetchData();
       resetCreate();
       console.debug("API response:", createResponse.data);
@@ -199,7 +199,7 @@ export const TasksSection = () => {
         `http://localhost:3000/api/task/disable/${taskId}`
       );
       console.debug("API response:", response.data);
-      setTaskDeleted(true);
+      setTaskDeleted(task);
       await fetchData();
     } catch (error: any) {
       setError(error.message || "Unknown error");
@@ -214,7 +214,7 @@ export const TasksSection = () => {
         { title: task.title }
       );
       console.debug("API response:", response.data);
-      setTaskEdited(true);
+      setTaskEdited(task);
       setEditingTask(null);
       resetEdit();
       await fetchData();
