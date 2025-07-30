@@ -90,6 +90,9 @@ export const RecycleBin = () => {
   const recoverTask = async (task: TaskProps) => {
     try {
       const taskId = task._id;
+      if (!taskId) {
+        throw new Error("Task ID is missing");
+      }
       const response = await axiosInstance.patch(
         `http://localhost:3000/api/task/enable/${taskId}`
       );
@@ -102,21 +105,14 @@ export const RecycleBin = () => {
   };
 
   const deleteTask = async (task: TaskProps) => {
-    const firebaseUID = auth?.currentUser?.uid;
     try {
-      if (!firebaseUID) {
-        throw new Error("User is not authenticated");
-      }
+      const firebaseUID = auth?.currentUser?.uid;
       const taskId = task._id;
-      if (!taskId) {
-        throw new Error("Task ID is missing");
+      if (!firebaseUID || !taskId) {
+        throw new Error("User is not authenticated or task ID is missing");
       }
-      await axiosInstance.patch(
-        `http://localhost:3000/api/task/removeFromUser/${firebaseUID}`,
-        { taskId }
-      );
       const deleteResponse = await axiosInstance.delete(
-        `http://localhost:3000/api/task/${taskId}`
+        `http://localhost:3000/api/task/${taskId}/${firebaseUID}`
       );
       setTaskDeleted(task);
       await fetchData();

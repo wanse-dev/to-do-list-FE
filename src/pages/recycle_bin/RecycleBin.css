@@ -32,7 +32,7 @@
 }
 
 .recycle-bin-page .tasks-list-section .task-cards-wrapper {
-  padding: 0 var(--padding-standard) var(--padding-standard);
+  padding: 0 var(--padding-standard);
   display: flex;
   flex-direction: column-reverse;
   gap: calc(var(--gap-standard) / 2);

@@ -153,26 +153,25 @@ export const TasksSection = () => {
   });
 
   const onSubmit = async (data: TaskProps) => {
-    const sendData = {
-      title: data.title,
-      isCompleted: data.isCompleted || false,
-      isActive: data.isActive || true,
-    };
-    const firebaseUID = auth?.currentUser?.uid;
     try {
-      const createResponse = await axiosInstance.post(
-        "http://localhost:3000/api/task",
+      const firebaseUID = auth?.currentUser?.uid;
+      const sendData = {
+        firebaseUid: firebaseUID,
+        title: data.title,
+        isCompleted: data.isCompleted || false,
+        isActive: data.isActive || true,
+      };
+      if (!firebaseUID) {
+        throw new Error("User is not authenticated");
+      }
+      const response = await axiosInstance.post(
+        `http://localhost:3000/api/task/`,
         sendData
       );
-      const taskId = createResponse.data.data._id;
-      await axiosInstance.patch(
-        `http://localhost:3000/api/task/assignToUser/${firebaseUID}`,
-        { firebaseUID, taskId }
-      );
-      setTaskAdded(createResponse.data.data);
+      setTaskAdded(response.data.data);
       await fetchData();
       resetCreate();
-      console.debug("API response:", createResponse.data);
+      console.debug("API response:", response.data);
     } catch (error: any) {
       setError(error.message || "Unknown error");
     }
@@ -184,7 +183,9 @@ export const TasksSection = () => {
       const endpoint = task.isCompleted
         ? `http://localhost:3000/api/task/undone/${taskId}`
         : `http://localhost:3000/api/task/complete/${taskId}`;
-
+      if (!taskId) {
+        throw new Error("Task ID is missing");
+      }
       const response = await axiosInstance.patch(endpoint);
       console.debug("API response:", response.data);
       await fetchData();
@@ -196,6 +197,9 @@ export const TasksSection = () => {
   const disableTask = async (task: TaskProps) => {
     try {
       const taskId = task._id;
+      if (!taskId) {
+        throw new Error("Task ID is missing");
+      }
       const response = await axiosInstance.patch(
         `http://localhost:3000/api/task/disable/${taskId}`
       );
@@ -210,6 +214,9 @@ export const TasksSection = () => {
   const editTask = async (task: TaskProps) => {
     try {
       const taskId = task._id;
+      if (!taskId) {
+        throw new Error("Task ID is missing");
+      }
       const response = await axiosInstance.patch(
         `http://localhost:3000/api/task/update/${taskId}`,
         { title: task.title }
@@ -231,7 +238,7 @@ export const TasksSection = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <div className="tasks-options" >
+      <div className="tasks-options">
         <button
           className={filter === "all" ? "active-section" : ""}
           onClick={() => setFilter("all")}
