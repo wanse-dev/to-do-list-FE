@@ -100,6 +100,10 @@
   overflow: hidden;
 }
 
+.folders-sidebar .folder-card-container:first-child {
+  justify-content: left;
+}
+
 .folders-sidebar .folder-card-container:last-child {
   border-bottom: none;
 }

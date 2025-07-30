@@ -67,8 +67,10 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
+
       const folderId = selectedFolder?._id;
-      const endpoint = folderId
+      // el endpoint depende si el folderId es "all" o un ID de carpeta en específico
+      const endpoint = (folderId && folderId !== "all")
         ? `http://localhost:3000/api/task/folder/${folderId}`
         : `http://localhost:3000/api/task/user/${firebaseUID}`;
 

@@ -165,7 +165,16 @@ export const FoldersSidebar = ({
         `http://localhost:3000/api/folder/`,
         sendData
       );
+
       setFolderAdded(response.data.data);
+
+      setSelectedFolder(response.data.data);
+      // guardo la carpeta seleccionada en localStorage
+      localStorage.setItem(
+        "selectedFolder",
+        JSON.stringify(response.data.data)
+      );
+
       await fetchData();
       resetFolderCreate();
       console.debug("API response:", response.data);
@@ -209,6 +218,15 @@ export const FoldersSidebar = ({
       await fetchData();
       console.debug("API response:", deleteResponse.data);
       setError(null);
+
+      // si el user llega a borrar la fplder seleccionada, entonces vuelve a "all" y se guarda el estado en localStorage
+      if (selectedFolder?._id === folder._id) {
+        setSelectedFolder({ _id: "all", title: "All" });
+        localStorage.setItem(
+          "selectedFolder",
+          JSON.stringify({ _id: "all", title: "All" })
+        );
+      }
     } catch (error: any) {
       console.debug("Error deleting folder: ", error);
     }
@@ -247,6 +265,32 @@ export const FoldersSidebar = ({
       <div className="folders-list-container">
         {loading && "Loading..."}
         <AnimatePresence mode="popLayout">
+          <motion.div
+            key="all-folder"
+            className="folder-card-container"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{
+              opacity: 0,
+              x: -100,
+              transition: { duration: 0.2 },
+            }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            layout
+          >
+            <FolderCard
+              title="ALL"
+              onClick={() => {
+                setSelectedFolder({ _id: "all", title: "All" });
+                localStorage.setItem(
+                  "selectedFolder",
+                  JSON.stringify({ _id: "all", title: "All" })
+                );
+              }}
+              isSelected={selectedFolder?._id === "all"}
+            />
+          </motion.div>
+
           {data.map((folder) => {
             const id = folder._id;
             const title = folder.title;
@@ -298,7 +342,13 @@ export const FoldersSidebar = ({
                 ) : (
                   <FolderCard
                     title={title}
-                    onClick={() => setSelectedFolder(folder)}
+                    onClick={() => {
+                      setSelectedFolder(folder);
+                      localStorage.setItem(
+                        "selectedFolder",
+                        JSON.stringify(folder)
+                      );
+                    }}
                     isSelected={selectedFolder?._id === folder._id}
                   />
                 )}

@@ -6,13 +6,13 @@ import { PomodoroSidebar } from "../../components/pomodoroSidebar/PomodoroSideba
 import { FoldersSidebar } from "../../components/foldersSidebar/FoldersSidebar";
 import { ToastContainer } from "react-toastify";
 
-type FolderProps = {
-  _id?: string;
-  title: string;
-};
-
 export const Tasks = () => {
-  const [selectedFolder, setSelectedFolder] = useState<FolderProps | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<any>(() => {
+    const savedState = localStorage.getItem("selectedFolder");
+    return savedState !== null
+      ? JSON.parse(savedState)
+      : { _id: "all", title: "All" };
+  });
 
   return (
     <div className="tasks-page">
@@ -20,7 +20,10 @@ export const Tasks = () => {
       <main className="tasks-main-content">
         <TasksSection selectedFolder={selectedFolder} />
         <aside>
-          <FoldersSidebar setSelectedFolder={setSelectedFolder} selectedFolder={selectedFolder} />
+          <FoldersSidebar
+            setSelectedFolder={setSelectedFolder}
+            selectedFolder={selectedFolder}
+          />
           <PomodoroSidebar />
         </aside>
       </main>
