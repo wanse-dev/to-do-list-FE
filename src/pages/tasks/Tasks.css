@@ -18,9 +18,17 @@
   box-sizing: border-box;
 }
 
+.tasks-main-content aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 @media (max-width: 1150px) {
   .tasks-main-content {
-    display: block;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0;
     width: 100%;
     max-width: min(1200px, 90%);
     margin-inline: auto;

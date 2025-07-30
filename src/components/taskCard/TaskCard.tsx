@@ -6,7 +6,7 @@ type TaskProps = {
   isActive: boolean;
 };
 
-export const TaskCard = (props : TaskProps) => {
+export const TaskCard = (props: TaskProps) => {
   return (
     <div className="task-card">
       <span className={props.isCompleted ? "task-completed" : ""}>

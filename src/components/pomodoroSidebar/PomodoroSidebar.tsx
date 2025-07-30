@@ -1,5 +1,5 @@
 import "./PomodoroSidebar.css";
 
 export const PomodoroSidebar = () => {
-  return <aside className="pomodoro-sidebar">pomodoro section</aside>;
+  return <section className="pomodoro-sidebar">pomodoro section</section>;
 };

@@ -1,9 +1,11 @@
 .pomodoro-sidebar {
   max-width: min(400px, 28vw);
   min-width: 0;
-  height: 75vh;
+  height: 64vh;
   box-sizing: border-box;
-  border: 1px dashed lightcoral; /* testing - BORRAR */
+  border: 1px solid var(--navbar-border-color);
+  border-radius: var(--border-radius);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   padding: var(--padding-standard)
 }
 

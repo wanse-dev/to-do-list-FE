@@ -18,6 +18,10 @@ type TaskProps = {
   isActive: boolean;
 };
 
+type TasksSectionProps = {
+  selectedFolder: { _id?: string; title: string } | null;
+};
+
 const validationsSchema = Joi.object<TaskProps>({
   title: Joi.string().required().max(150).messages({
     "string.empty": "You must type something...",
@@ -25,7 +29,7 @@ const validationsSchema = Joi.object<TaskProps>({
   }),
 });
 
-export const TasksSection = () => {
+export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
   const {
     register: registerCreate,
     handleSubmit: handleCreateSubmit,
@@ -63,9 +67,12 @@ export const TasksSection = () => {
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
-      const response = await axiosInstance.get(
-        `http://localhost:3000/api/task/user/${firebaseUID}`
-      );
+      const folderId = selectedFolder?._id;
+      const endpoint = folderId
+        ? `http://localhost:3000/api/task/folder/${folderId}`
+        : `http://localhost:3000/api/task/user/${firebaseUID}`;
+
+      const response = await axiosInstance.get(endpoint);
       setData(response.data.data || []);
       console.debug("API response:", response.data);
     } catch (error: any) {
@@ -77,7 +84,7 @@ export const TasksSection = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedFolder]);
 
   useEffect(() => {
     if (error) {
@@ -160,6 +167,7 @@ export const TasksSection = () => {
         title: data.title,
         isCompleted: data.isCompleted || false,
         isActive: data.isActive || true,
+        folderId: selectedFolder?._id || null,
       };
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
