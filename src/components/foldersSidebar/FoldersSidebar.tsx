@@ -254,16 +254,15 @@ export const FoldersSidebar = ({
       className={`folders-sidebar ${isExpanded ? "expanded" : ""}`}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <header>
         <h2>Folders</h2>
         <button onClick={toggleFolders}>
-          {isExpanded ? (
-            <ArrowDownIcon size={20} style={{ transform: "rotate(180deg)" }} />
-          ) : (
-            <ArrowDownIcon size={20} />
-          )}
+          <ArrowDownIcon
+            size={20}
+            className={isExpanded ? "arrow-icon rotated" : "arrow-icon"}
+          />
         </button>
       </header>
       <form

@@ -35,15 +35,17 @@
   align-items: center;
   cursor: pointer;
   color: var(--navbar-text-color);
-  transition: transform var(--transition-quick);
 }
 
 .folders-sidebar header button:hover {
-  transform: scale(1.1);
   color: var(--navbar-hover-color);
 }
 
-.folders-sidebar header button .rotated {
+.folders-sidebar .arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.folders-sidebar .arrow-icon.rotated {
   transform: rotate(180deg);
 }
 

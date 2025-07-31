@@ -138,10 +138,10 @@ export const RecycleBin = () => {
         >
           <div className="task-cards-wrapper">
             {loading && "Loading..."}
-            {error && (
-              <p>
-                {error.name}: {error.message}
-              </p>
+            {disabledTasks.length === 0 && (
+              <span className="no-disabledTasks-message">
+                No tasks in the recycle bin
+              </span>
             )}
             <AnimatePresence mode="popLayout">
               {disabledTasks.map((task) => (

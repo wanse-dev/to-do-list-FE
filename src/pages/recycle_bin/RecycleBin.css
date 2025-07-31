@@ -12,15 +12,14 @@
   justify-content: center;
   align-items: center;
   gap: clamp(0.75rem, 2vw, 1.5rem);
-  width: 100%;
-  max-width: min(1200px, 90%);
+  width: 90%;
   margin-inline: auto;
   margin-bottom: 2rem;
   box-sizing: border-box;
 }
 
 .recycle-bin-page .tasks-list-section {
-  width: min(100%, 600px);
+  width: 100%;
   min-height: 100px;
   box-sizing: border-box;
   border: 1px solid var(--navbar-border-color);
@@ -36,6 +35,17 @@
   display: flex;
   flex-direction: column-reverse;
   gap: calc(var(--gap-standard) / 2);
+}
+
+.recycle-bin-page
+  .tasks-list-section
+  .task-cards-wrapper
+  .no-disabledTasks-message {
+  color: var(--navbar-text-color);
+  opacity: 0.7;
+  font-size: 0.8em;
+  text-align: center;
+  padding: 1rem;
 }
 
 .recycle-bin-page .tasks-list-section .task-card-container {
