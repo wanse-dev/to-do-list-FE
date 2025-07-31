@@ -1,3 +1,15 @@
 .fall-back {
-  color: rgb(171, 32, 32);
+  color: var(--navbar-hover-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  user-select: none;
+}
+
+.go-back-button {
+  padding: 0.5rem;
+  opacity: 0.7;
+  color: var(--navbar-text-color);
+  text-decoration: none;
 }
