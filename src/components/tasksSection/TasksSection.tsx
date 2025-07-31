@@ -70,9 +70,10 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
 
       const folderId = selectedFolder?._id;
       // el endpoint depende si el folderId es "all" o un ID de carpeta en específico
-      const endpoint = (folderId && folderId !== "all")
-        ? `http://localhost:3000/api/task/folder/${folderId}`
-        : `http://localhost:3000/api/task/user/${firebaseUID}`;
+      const endpoint =
+        folderId && folderId !== "all"
+          ? `http://localhost:3000/api/task/folder/${folderId}`
+          : `http://localhost:3000/api/task/user/${firebaseUID}`;
 
       const response = await axiosInstance.get(endpoint);
       setData(response.data.data || []);
@@ -163,6 +164,19 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
 
   const onSubmit = async (data: TaskProps) => {
     try {
+      if (selectedFolder?._id === "all") {
+        toast.error(
+          "Oops! 'All' is just for viewing. Pick a folder to add your task.",
+          {
+            position: "bottom-right",
+            autoClose: 3000,
+            pauseOnHover: true,
+            draggable: false,
+          }
+        );
+        return; // evito de mostrar cualquier otro error saliendo directamente con return
+      }
+
       const firebaseUID = auth?.currentUser?.uid;
       const sendData = {
         firebaseUid: firebaseUID,

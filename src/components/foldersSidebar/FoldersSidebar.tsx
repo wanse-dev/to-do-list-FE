@@ -16,7 +16,7 @@ type FolderProps = {
   title: string;
 };
 
-type FoldersSidebarProps = {
+type SelectedFolderProps = {
   selectedFolder: FolderProps | null;
   setSelectedFolder: (folder: FolderProps | null) => void;
 };
@@ -31,7 +31,7 @@ const validationsSchema = Joi.object<FolderProps>({
 export const FoldersSidebar = ({
   setSelectedFolder,
   selectedFolder,
-}: FoldersSidebarProps) => {
+}: SelectedFolderProps) => {
   const {
     register: registerFolderCreate,
     handleSubmit: handleFolderCreateSubmit,
@@ -59,7 +59,10 @@ export const FoldersSidebar = ({
   const [folderEdited, setFolderEdited] = useState<FolderProps | null>(null);
   const [editingFolder, setEditingFolder] = useState<FolderProps | null>(null);
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(() => {
+    const savedState = localStorage.getItem("foldersSidebarExpanded");
+    return savedState !== null ? JSON.parse(savedState) : true;
+  }); // uso un lazy initializer para que la función se ejecute una sola vez al inicio, y ahorro recursos
 
   const auth = useAuth();
 
@@ -84,6 +87,16 @@ export const FoldersSidebar = ({
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("foldersSidebarExpanded", JSON.stringify(isExpanded));
+    document.body.style.setProperty(
+      "--current-foldersSection-height",
+      isExpanded
+        ? "var(--foldersSection-expanded-height)"
+        : "var(--foldersSection-collapsed-height)"
+    );
+  }, [isExpanded]);
 
   useEffect(() => {
     if (error) {
@@ -232,8 +245,8 @@ export const FoldersSidebar = ({
     }
   };
 
-  const toggleSidebar = () => {
-    setIsExpanded(!isExpanded);
+  const toggleFolders = () => {
+    setIsExpanded((prev: any) => !prev);
   };
 
   return (
@@ -245,8 +258,12 @@ export const FoldersSidebar = ({
     >
       <header>
         <h2>Folders</h2>
-        <button onClick={toggleSidebar}>
-          <ArrowDownIcon size={15} />
+        <button onClick={toggleFolders}>
+          {isExpanded ? (
+            <ArrowDownIcon size={20} style={{ transform: "rotate(180deg)" }} />
+          ) : (
+            <ArrowDownIcon size={20} />
+          )}
         </button>
       </header>
       <form

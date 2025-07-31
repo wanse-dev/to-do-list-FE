@@ -3,6 +3,9 @@
   --navbar-collapsed-width: 75px;
   --navbar-mobile-height: 60px;
   --current-navbar-width: var(--navbar-expanded-width);
+  --foldersSection-expanded-height: 1000px;
+  --foldersSection-collapsed-height: 60px;
+  --current-foldersSection-height: var(--foldersSection-expanded-height);
   --border-radius: 0.5rem;
   --transition-ease: 0.3s ease;
   --transition-quick: 0.1s cubic-bezier(0.4, 0, 0.2, 1);

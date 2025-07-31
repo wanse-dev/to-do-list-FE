@@ -24,7 +24,7 @@ export const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState(() => {
     const savedState = localStorage.getItem("navbarExpanded"); // aprovecho el localStorage para guardar el estado del navbar
     return savedState !== null ? JSON.parse(savedState) : true;
-  });
+  }); // y uso un lazy initializer para que la función se ejecute una sola vez al inicio, y ahorro recursos
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
 
