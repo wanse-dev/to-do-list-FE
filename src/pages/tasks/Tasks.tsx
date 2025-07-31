@@ -16,7 +16,7 @@ export const Tasks = () => {
 
   return (
     <div className="tasks-page">
-      <PageTitle title="Tasks" subtitle="One step by time." />
+      <PageTitle title="Tasks" subtitle="Manage your tasks." />
       <main className="tasks-main-content">
         <TasksSection selectedFolder={selectedFolder} />
         <aside>

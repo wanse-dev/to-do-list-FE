@@ -57,7 +57,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
   const [taskEdited, setTaskEdited] = useState<TaskProps | null>(null);
   const [editingTask, setEditingTask] = useState<TaskProps | null>(null);
 
-  const [filter, setFilter] = useState<"all" | "done" | "undone">("all");
+  const [filter, setFilter] = useState<"tasks" | "done" | "undone">("tasks");
 
   const auth = useAuth();
 
@@ -155,7 +155,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
   ]);
 
   const filteredTasks = data.filter((task) => {
-    if (filter === "all" && task.isActive) return true;
+    if (filter === "tasks" && task.isActive) return true;
     if (filter === "done" && task.isActive) return task.isCompleted;
     if (filter === "undone" && task.isActive) return !task.isCompleted;
     return false;
@@ -250,10 +250,10 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
     >
       <div className="tasks-options">
         <button
-          className={filter === "all" ? "active-section" : ""}
-          onClick={() => setFilter("all")}
+          className={filter === "tasks" ? "active-section" : ""}
+          onClick={() => setFilter("tasks")}
         >
-          All
+          Tasks
         </button>
         <button
           className={filter === "done" ? "active-section" : ""}
@@ -269,7 +269,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
         </button>
       </div>
 
-      {filter === "all" && (
+      {filter === "tasks" && (
         <form onSubmit={handleCreateSubmit(onSubmit)} className="task-form">
           <input
             {...registerCreate("title")}
@@ -304,7 +304,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 layout
               >
-                {filter === "all" && (
+                {filter === "tasks" && (
                   <div className="task-delete-edit-container">
                     <button
                       className="delete-button"

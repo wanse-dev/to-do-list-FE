@@ -17,4 +17,25 @@
   font-weight: 500;
   text-align: left;
   cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.folder-card-button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background-color: var(--navbar-hover-color);
+  transition: width 0.3s ease;
+}
+
+.folder-card.selected .folder-card-button {
+  color: var(--navbar-hover-color);
+}
+
+.folder-card.selected .folder-card-button::after {
+  width: 100%;
 }
