@@ -284,8 +284,20 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
           </form>
         )}
 
+      {filter === "tasks" && selectedFolder?._id === "all" && (
+        <span className="unselected-folder-error">
+          You must add a task in a folder created by yourself. ("ALL" is not a
+          folder, it's just a filter)
+        </span>
+      )}
+
       <div className="task-cards-wrapper">
         {loading && "Loading..."}
+        {filter === "tasks" &&
+          filteredTasks.length === 0 &&
+          selectedFolder?._id !== "all" && (
+            <span className="no-tasks-message">No tasks in this folder</span>
+          )}
         <AnimatePresence mode="popLayout">
           {filteredTasks.map((task) => {
             const id = task._id;

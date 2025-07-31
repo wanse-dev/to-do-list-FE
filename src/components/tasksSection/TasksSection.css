@@ -86,6 +86,15 @@
   transform: scale(1.03);
 }
 
+.tasks-list-section .unselected-folder-error,
+.tasks-list-section .no-tasks-message {
+  color: var(--navbar-text-color);
+  opacity: 0.7;
+  font-size: 0.8em;
+  text-align: center;
+  padding: 1rem;
+}
+
 .tasks-list-section .task-cards-wrapper {
   padding: 0 var(--padding-standard) var(--padding-standard);
   display: flex;
