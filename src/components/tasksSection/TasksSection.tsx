@@ -164,19 +164,6 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
 
   const onSubmit = async (data: TaskProps) => {
     try {
-      if (selectedFolder?._id === "all") {
-        toast.error(
-          "Oops! 'All' is just for viewing. Pick a folder to add your task.",
-          {
-            position: "bottom-right",
-            autoClose: 3000,
-            pauseOnHover: true,
-            draggable: false,
-          }
-        );
-        return; // evito de mostrar cualquier otro error saliendo directamente con return
-      }
-
       const firebaseUID = auth?.currentUser?.uid;
       const sendData = {
         firebaseUid: firebaseUID,
@@ -283,18 +270,19 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
         </button>
       </div>
 
-      {filter === "tasks" && (
-        <form onSubmit={handleCreateSubmit(onSubmit)} className="task-form">
-          <input
-            {...registerCreate("title")}
-            type="text"
-            placeholder="New task..."
-          />
-          <button type="submit">
-            <CirclePlus size={30} />
-          </button>
-        </form>
-      )}
+      {filter === "tasks" &&
+        selectedFolder?._id !== "all" && ( // muestro el input solo si el folder seleccionado no es "all", y si el filtro está en tasks
+          <form onSubmit={handleCreateSubmit(onSubmit)} className="task-form">
+            <input
+              {...registerCreate("title")}
+              type="text"
+              placeholder="New task..."
+            />
+            <button type="submit">
+              <CirclePlus size={30} />
+            </button>
+          </form>
+        )}
 
       <div className="task-cards-wrapper">
         {loading && "Loading..."}

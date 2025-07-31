@@ -29,6 +29,7 @@ export const Navbar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
 
   const [username, setUsername] = useState<string>("");
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -44,6 +45,7 @@ export const Navbar = () => {
         `http://localhost:3000/api/users/${firebaseUID}`
       );
       setUsername(response.data.data?.username || "username");
+      setAvatar(response.data.data?.avatarURL || null);
       console.debug("API response:", response.data);
     } catch (error) {
       if (error instanceof Error) {
@@ -108,7 +110,7 @@ export const Navbar = () => {
 
       <div className="navbar-bottom">
         <div className="navbar-user">
-          <User size={24} />
+          {avatar ? <img src={avatar} alt="User avatar" draggable="false"/> : <User size={24} />}
           {error && "Error fetching username"}
           {isExpanded && !isMobile && (
             <span className="navbar-text">{username}</span>
