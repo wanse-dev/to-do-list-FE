@@ -32,7 +32,7 @@ export const RecycleBin = () => {
         throw new Error("User is not authenticated");
       }
       const response = await axiosInstance.get(
-        `http://localhost:3000/api/task/user/${firebaseUID}`
+        `/task/user/${firebaseUID}`
       );
       setData(response.data.data || []);
       console.debug("API response:", response.data);
@@ -94,7 +94,7 @@ export const RecycleBin = () => {
         throw new Error("Task ID is missing");
       }
       const response = await axiosInstance.patch(
-        `http://localhost:3000/api/task/enable/${taskId}`
+        `/task/enable/${taskId}`
       );
       console.debug("API response:", response.data);
       setTaskRecovered(task);
@@ -112,7 +112,7 @@ export const RecycleBin = () => {
         throw new Error("User is not authenticated or task ID is missing");
       }
       const deleteResponse = await axiosInstance.delete(
-        `http://localhost:3000/api/task/${taskId}/${firebaseUID}`
+        `/task/${taskId}/${firebaseUID}`
       );
       setTaskDeleted(task);
       await fetchData();

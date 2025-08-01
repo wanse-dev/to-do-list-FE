@@ -62,7 +62,7 @@ export const Register = () => {
         email: data.email,
       };
       const response = await axiosInstance.post(
-        "http://localhost:3000/api/users",
+        "/users",
         sendData
       );
       console.debug("User created in backend:", response.data);

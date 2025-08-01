@@ -73,7 +73,7 @@ export const FoldersSidebar = ({
         throw new Error("User is not authenticated");
       }
       const response = await axiosInstance.get(
-        `http://localhost:3000/api/folder/user/${firebaseUID}`
+        `/folder/user/${firebaseUID}`
       );
       setData(response.data.data || []);
       console.debug("API response:", response.data);
@@ -175,7 +175,7 @@ export const FoldersSidebar = ({
         throw new Error("User is not authenticated");
       }
       const response = await axiosInstance.post(
-        `http://localhost:3000/api/folder/`,
+        `/folder/`,
         sendData
       );
 
@@ -203,7 +203,7 @@ export const FoldersSidebar = ({
         throw new Error("Folder ID is missing");
       }
       const response = await axiosInstance.patch(
-        `http://localhost:3000/api/folder/update/${folderId}`,
+        `/folder/update/${folderId}`,
         { title: folder.title }
       );
       console.debug("API response:", response.data);
@@ -224,7 +224,7 @@ export const FoldersSidebar = ({
         throw new Error("User is not authenticated or folder ID is missing");
       }
       const deleteResponse = await axiosInstance.delete(
-        `http://localhost:3000/api/folder/${folderId}/${firebaseUID}`
+        `/folder/${folderId}/${firebaseUID}`
       );
 
       setFolderDeleted(folder);
@@ -232,7 +232,7 @@ export const FoldersSidebar = ({
       console.debug("API response:", deleteResponse.data);
       setError(null);
 
-      // si el user llega a borrar la fplder seleccionada, entonces vuelve a "all" y se guarda el estado en localStorage
+      // si el user llega a borrar la folder seleccionada, entonces vuelve a "all" y se guarda el estado en localStorage
       if (selectedFolder?._id === folder._id) {
         setSelectedFolder({ _id: "all", title: "All" });
         localStorage.setItem(

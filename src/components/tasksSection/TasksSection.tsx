@@ -72,8 +72,8 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       // el endpoint depende si el folderId es "all" o un ID de carpeta en específico
       const endpoint =
         folderId && folderId !== "all"
-          ? `http://localhost:3000/api/task/folder/${folderId}`
-          : `http://localhost:3000/api/task/user/${firebaseUID}`;
+          ? `/task/folder/${folderId}`
+          : `/task/user/${firebaseUID}`;
 
       const response = await axiosInstance.get(endpoint);
       setData(response.data.data || []);
@@ -176,7 +176,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
         throw new Error("User is not authenticated");
       }
       const response = await axiosInstance.post(
-        `http://localhost:3000/api/task/`,
+        `/task/`,
         sendData
       );
       setTaskAdded(response.data.data);
@@ -192,8 +192,8 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
     try {
       const taskId = task._id;
       const endpoint = task.isCompleted
-        ? `http://localhost:3000/api/task/undone/${taskId}`
-        : `http://localhost:3000/api/task/complete/${taskId}`;
+        ? `/task/undone/${taskId}`
+        : `/task/complete/${taskId}`;
       if (!taskId) {
         throw new Error("Task ID is missing");
       }
@@ -212,7 +212,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
         throw new Error("Task ID is missing");
       }
       const response = await axiosInstance.patch(
-        `http://localhost:3000/api/task/disable/${taskId}`
+        `/task/disable/${taskId}`
       );
       console.debug("API response:", response.data);
       setTaskDeleted(task);
@@ -229,7 +229,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
         throw new Error("Task ID is missing");
       }
       const response = await axiosInstance.patch(
-        `http://localhost:3000/api/task/update/${taskId}`,
+        `/task/update/${taskId}`,
         { title: task.title }
       );
       console.debug("API response:", response.data);

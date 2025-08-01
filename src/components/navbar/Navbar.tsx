@@ -42,7 +42,7 @@ export const Navbar = () => {
         throw new Error("User is not authenticated");
       }
       const response = await axiosInstance.get(
-        `http://localhost:3000/api/users/${firebaseUID}`
+        `/users/${firebaseUID}`
       );
       setUsername(response.data.data?.username || "username");
       setAvatar(response.data.data?.avatarURL || null);
