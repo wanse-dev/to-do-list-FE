@@ -92,6 +92,8 @@ export const Navbar = () => {
         </button>
       )}
 
+      {loading && <div className="navbar-loading"></div>}
+
       <ul className="navbar-menu">
         {navItems.map((item, index) => (
           <li key={index} className="navbar-item">
