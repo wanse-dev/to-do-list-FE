@@ -1,4 +1,4 @@
-import "./FallBack.css";
+import "./fallBack.css";
 import { Link } from "react-router";
 
 export const FallBack = () => {
