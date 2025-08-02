@@ -7,7 +7,7 @@ import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
 import { TaskCard } from "../../components/taskCard/TaskCard";
 import { PageTitle } from "../../components/pageTitle/PageTitle";
-import { recicleBinToasts } from "../../components/toasts/toasts";
+import { recicleBinToasts } from "../../config/toasts";
 
 type TaskProps = {
   _id?: string;

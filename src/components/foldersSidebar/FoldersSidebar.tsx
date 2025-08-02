@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FolderCard } from "../folderCard/FolderCard";
 import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
-import { foldersSidebarToasts } from "../../components/toasts/toasts";
+import { foldersSidebarToasts } from "../../config/toasts";
 
 type FolderProps = {
   _id?: string;

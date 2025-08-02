@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
 import { TaskCard } from "../taskCard/TaskCard";
-import { foldersSectionToasts } from "../toasts/toasts";
+import { foldersSectionToasts } from "../../config/toasts";
 
 type TaskProps = {
   _id?: string;
