@@ -1,12 +1,13 @@
 import "./RecycleBin.css";
 import { useState, useEffect } from "react";
+import { Undo2, Trash } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ToastContainer } from "react-toastify";
 import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
 import { TaskCard } from "../../components/taskCard/TaskCard";
 import { PageTitle } from "../../components/pageTitle/PageTitle";
-import { Undo2, Trash } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ToastContainer, toast } from "react-toastify";
+import { recicleBinToasts } from "../../components/toasts/toasts";
 
 type TaskProps = {
   _id?: string;
@@ -31,9 +32,7 @@ export const RecycleBin = () => {
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
-      const response = await axiosInstance.get(
-        `/task/user/${firebaseUID}`
-      );
+      const response = await axiosInstance.get(`/task/user/${firebaseUID}`);
       setData(response.data.data || []);
       console.debug("API response:", response.data);
     } catch (error) {
@@ -47,55 +46,13 @@ export const RecycleBin = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(String(error), {
-        position: "bottom-right",
-        autoClose: 3000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-    }
-
-    if (taskDeleted) {
-      toast.info("Task removed successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setTaskDeleted(null);
-    }
-
-    if (taskRecovered) {
-      toast.info("Task recovered successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setTaskRecovered(null);
-    }
-  }, [error, taskDeleted, taskRecovered]);
-
-  const disabledTasks = data.filter((task) => {
-    // filtro los tasks que el usuario "eliminó"
-    return !task.isActive ? true : false;
-  });
-
   const recoverTask = async (task: TaskProps) => {
     try {
       const taskId = task._id;
       if (!taskId) {
         throw new Error("Task ID is missing");
       }
-      const response = await axiosInstance.patch(
-        `/task/enable/${taskId}`
-      );
+      const response = await axiosInstance.patch(`/task/enable/${taskId}`);
       console.debug("API response:", response.data);
       setTaskRecovered(task);
       await fetchData();
@@ -122,6 +79,25 @@ export const RecycleBin = () => {
       console.debug("Error deleting task: ", error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    recicleBinToasts({
+      error,
+      taskDeleted,
+      taskRecovered,
+      setTaskDeleted,
+      setTaskRecovered,
+    });
+  }, [error, taskDeleted, taskRecovered]);
+
+  const disabledTasks = data.filter((task) => {
+    // filtro los tasks que el usuario "eliminó"
+    return !task.isActive ? true : false;
+  });
 
   return (
     <div className="recycle-bin-page">

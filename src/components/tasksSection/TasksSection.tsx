@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
+import { CirclePlus, Trash, Pen } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
 import { TaskCard } from "../taskCard/TaskCard";
-import { CirclePlus, Trash, Pen } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-toastify";
+import { foldersSectionToasts } from "../toasts/toasts";
 
 type TaskProps = {
   _id?: string;
@@ -30,6 +30,17 @@ const validationsSchema = Joi.object<TaskProps>({
 });
 
 export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
+  const [data, setData] = useState<TaskProps[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const [taskAdded, setTaskAdded] = useState<TaskProps | null>(null);
+  const [taskDeleted, setTaskDeleted] = useState<TaskProps | null>(null);
+  const [taskEdited, setTaskEdited] = useState<TaskProps | null>(null);
+  const [editingTask, setEditingTask] = useState<TaskProps | null>(null);
+
+  const [filter, setFilter] = useState<"tasks" | "done" | "undone">("tasks");
+
   const {
     register: registerCreate,
     handleSubmit: handleCreateSubmit,
@@ -47,17 +58,6 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
   } = useForm<TaskProps>({
     resolver: joiResolver(validationsSchema),
   });
-
-  const [data, setData] = useState<TaskProps[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | string | null>(null);
-
-  const [taskAdded, setTaskAdded] = useState<TaskProps | null>(null);
-  const [taskDeleted, setTaskDeleted] = useState<TaskProps | null>(null);
-  const [taskEdited, setTaskEdited] = useState<TaskProps | null>(null);
-  const [editingTask, setEditingTask] = useState<TaskProps | null>(null);
-
-  const [filter, setFilter] = useState<"tasks" | "done" | "undone">("tasks");
 
   const auth = useAuth();
 
@@ -85,83 +85,6 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [selectedFolder]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(String(error), {
-        position: "bottom-right",
-        autoClose: 3000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-    }
-
-    if (createErrors.title?.message) {
-      toast.error(createErrors.title.message, {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-    }
-
-    if (editErrors.title?.message) {
-      toast.error(editErrors.title.message, {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-    }
-
-    if (taskAdded) {
-      toast.success("Task added successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setTaskAdded(null);
-    }
-
-    if (taskDeleted) {
-      toast.info("Task removed successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setTaskDeleted(null);
-    }
-
-    if (taskEdited) {
-      toast.success("Task updated successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setTaskEdited(null);
-    }
-  }, [
-    error,
-    createErrors.title,
-    editErrors.title,
-    taskAdded,
-    taskDeleted,
-    taskEdited,
-  ]);
-
-  const filteredTasks = data.filter((task) => {
-    if (filter === "tasks" && task.isActive) return true;
-    if (filter === "done" && task.isActive) return task.isCompleted;
-    if (filter === "undone" && task.isActive) return !task.isCompleted;
-    return false;
-  });
-
   const onSubmit = async (data: TaskProps) => {
     try {
       const firebaseUID = auth?.currentUser?.uid;
@@ -175,10 +98,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
-      const response = await axiosInstance.post(
-        `/task/`,
-        sendData
-      );
+      const response = await axiosInstance.post(`/task/`, sendData);
       setTaskAdded(response.data.data);
       await fetchData();
       resetCreate();
@@ -211,9 +131,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       if (!taskId) {
         throw new Error("Task ID is missing");
       }
-      const response = await axiosInstance.patch(
-        `/task/disable/${taskId}`
-      );
+      const response = await axiosInstance.patch(`/task/disable/${taskId}`);
       console.debug("API response:", response.data);
       setTaskDeleted(task);
       await fetchData();
@@ -228,10 +146,9 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       if (!taskId) {
         throw new Error("Task ID is missing");
       }
-      const response = await axiosInstance.patch(
-        `/task/update/${taskId}`,
-        { title: task.title }
-      );
+      const response = await axiosInstance.patch(`/task/update/${taskId}`, {
+        title: task.title,
+      });
       console.debug("API response:", response.data);
       setTaskEdited(task);
       setEditingTask(null);
@@ -241,6 +158,38 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       setError(error.message || "Unknown error");
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedFolder]);
+
+  useEffect(() => {
+    foldersSectionToasts({
+      error,
+      createErrors,
+      editErrors,
+      taskAdded,
+      taskDeleted,
+      taskEdited,
+      setTaskAdded,
+      setTaskDeleted,
+      setTaskEdited,
+    });
+  }, [
+    error,
+    createErrors.title,
+    editErrors.title,
+    taskAdded,
+    taskDeleted,
+    taskEdited,
+  ]);
+
+  const filteredTasks = data.filter((task) => {
+    if (filter === "tasks" && task.isActive) return true;
+    if (filter === "done" && task.isActive) return task.isCompleted;
+    if (filter === "undone" && task.isActive) return !task.isCompleted;
+    return false;
+  });
 
   return (
     <motion.section

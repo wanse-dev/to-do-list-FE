@@ -1,15 +1,15 @@
 import "./FoldersSidebar.css";
 import "react-toastify/dist/ReactToastify.css";
+import { joiResolver } from "@hookform/resolvers/joi";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
+import { ArrowDownIcon, CirclePlus, Trash, Pen } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { FolderCard } from "../folderCard/FolderCard";
 import axiosInstance from "../../config/axios";
 import { useAuth } from "../../contexts/authContext";
-import { ArrowDownIcon, CirclePlus, Trash, Pen } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-toastify";
+import { foldersSidebarToasts } from "../../components/toasts/toasts";
 
 type FolderProps = {
   _id?: string;
@@ -32,6 +32,20 @@ export const FoldersSidebar = ({
   setSelectedFolder,
   selectedFolder,
 }: SelectedFolderProps) => {
+  const [data, setData] = useState<FolderProps[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const [folderAdded, setFolderAdded] = useState<FolderProps | null>(null);
+  const [folderDeleted, setFolderDeleted] = useState<FolderProps | null>(null);
+  const [folderEdited, setFolderEdited] = useState<FolderProps | null>(null);
+  const [editingFolder, setEditingFolder] = useState<FolderProps | null>(null);
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(() => {
+    const savedState = localStorage.getItem("foldersSidebarExpanded");
+    return savedState !== null ? JSON.parse(savedState) : true;
+  }); // uso un lazy initializer para que la función se ejecute una sola vez al inicio, y ahorro recursos
+
   const {
     register: registerFolderCreate,
     handleSubmit: handleFolderCreateSubmit,
@@ -50,20 +64,6 @@ export const FoldersSidebar = ({
     resolver: joiResolver(validationsSchema),
   });
 
-  const [data, setData] = useState<FolderProps[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | string | null>(null);
-
-  const [folderAdded, setFolderAdded] = useState<FolderProps | null>(null);
-  const [folderDeleted, setFolderDeleted] = useState<FolderProps | null>(null);
-  const [folderEdited, setFolderEdited] = useState<FolderProps | null>(null);
-  const [editingFolder, setEditingFolder] = useState<FolderProps | null>(null);
-
-  const [isExpanded, setIsExpanded] = useState<boolean>(() => {
-    const savedState = localStorage.getItem("foldersSidebarExpanded");
-    return savedState !== null ? JSON.parse(savedState) : true;
-  }); // uso un lazy initializer para que la función se ejecute una sola vez al inicio, y ahorro recursos
-
   const auth = useAuth();
 
   const fetchData = async () => {
@@ -72,9 +72,7 @@ export const FoldersSidebar = ({
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
-      const response = await axiosInstance.get(
-        `/folder/user/${firebaseUID}`
-      );
+      const response = await axiosInstance.get(`/folder/user/${firebaseUID}`);
       setData(response.data.data || []);
       console.debug("API response:", response.data);
     } catch (error: any) {
@@ -83,86 +81,6 @@ export const FoldersSidebar = ({
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("foldersSidebarExpanded", JSON.stringify(isExpanded));
-    document.body.style.setProperty(
-      "--current-foldersSection-height",
-      isExpanded
-        ? "var(--foldersSection-expanded-height)"
-        : "var(--foldersSection-collapsed-height)"
-    );
-  }, [isExpanded]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(String(error), {
-        position: "bottom-right",
-        autoClose: 3000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-    }
-
-    if (createFolderErrors.title?.message) {
-      toast.error(createFolderErrors.title.message, {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-    }
-
-    if (editFolderErrors.title?.message) {
-      toast.error(editFolderErrors.title.message, {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-    }
-
-    if (folderAdded) {
-      toast.success("Folder added successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setFolderAdded(null);
-    }
-
-    if (folderDeleted) {
-      toast.info("Folder removed successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setFolderDeleted(null);
-    }
-
-    if (folderEdited) {
-      toast.success("Folder updated successfully", {
-        position: "bottom-right",
-        autoClose: 2000,
-        pauseOnHover: true,
-        draggable: false,
-      });
-      setFolderEdited(null);
-    }
-  }, [
-    error,
-    createFolderErrors.title,
-    editFolderErrors.title,
-    folderAdded,
-    folderDeleted,
-    folderEdited,
-  ]);
 
   const onSubmit = async (folder: FolderProps) => {
     try {
@@ -174,10 +92,7 @@ export const FoldersSidebar = ({
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
-      const response = await axiosInstance.post(
-        `/folder/`,
-        sendData
-      );
+      const response = await axiosInstance.post(`/folder/`, sendData);
 
       setFolderAdded(response.data.data);
 
@@ -202,10 +117,9 @@ export const FoldersSidebar = ({
       if (!folderId) {
         throw new Error("Folder ID is missing");
       }
-      const response = await axiosInstance.patch(
-        `/folder/update/${folderId}`,
-        { title: folder.title }
-      );
+      const response = await axiosInstance.patch(`/folder/update/${folderId}`, {
+        title: folder.title,
+      });
       console.debug("API response:", response.data);
       setFolderEdited(folder);
       setEditingFolder(null);
@@ -244,6 +158,41 @@ export const FoldersSidebar = ({
       console.debug("Error deleting folder: ", error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("foldersSidebarExpanded", JSON.stringify(isExpanded));
+    document.body.style.setProperty(
+      "--current-foldersSection-height",
+      isExpanded
+        ? "var(--foldersSection-expanded-height)"
+        : "var(--foldersSection-collapsed-height)"
+    );
+  }, [isExpanded]);
+
+  useEffect(() => {
+    foldersSidebarToasts({
+      error,
+      createFolderErrors,
+      editFolderErrors,
+      folderAdded,
+      folderDeleted,
+      folderEdited,
+      setFolderAdded,
+      setFolderDeleted,
+      setFolderEdited,
+    });
+  }, [
+    error,
+    createFolderErrors.title,
+    editFolderErrors.title,
+    folderAdded,
+    folderDeleted,
+    folderEdited,
+  ]);
 
   const toggleFolders = () => {
     setIsExpanded((prev: any) => !prev);
