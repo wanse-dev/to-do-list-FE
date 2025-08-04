@@ -32,12 +32,21 @@
   right: 1rem;
   padding: 0.5rem;
   border-radius: 50%;
-  transition: transform 0.3s var(--transition-quick);
+  transition: color 0.3s ease;
 }
 
 .navbar-toggle:hover {
-  transform: scale(1.1);
+  color: var(--navbar-hover-color);
 }
+
+.navbar-toggle .arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.navbar-toggle .arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
 
 .navbar-menu {
   list-style: none;

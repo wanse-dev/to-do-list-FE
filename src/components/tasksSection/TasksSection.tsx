@@ -252,8 +252,14 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       )}
 
       <div className="task-cards-wrapper">
-        {loading && "Loading..."}
+        {loading && (
+          <div>
+            <span>Loading tasks...</span>
+          </div>
+          /* TO-DO: tres skeleton loaders en vez de ese mensaje de arriba*/
+        )}
         {filter === "tasks" &&
+          !loading &&
           filteredTasks.length === 0 &&
           selectedFolder?._id !== "all" && (
             <span className="no-tasks-message">No tasks in this folder</span>

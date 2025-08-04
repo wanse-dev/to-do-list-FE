@@ -2,15 +2,7 @@ import { Link } from "react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/authContext";
 import axiosInstance from "../../config/axios";
-import {
-  Home,
-  Timer,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-  User,
-} from "lucide-react";
+import { Home, Timer, Trash2, ChevronRight, LogOut, User } from "lucide-react";
 import { LogoutButton } from "../logoutButton/LogoutButton";
 import "./Navbar.css";
 
@@ -41,9 +33,7 @@ export const Navbar = () => {
       if (!firebaseUID) {
         throw new Error("User is not authenticated");
       }
-      const response = await axiosInstance.get(
-        `/users/${firebaseUID}`
-      );
+      const response = await axiosInstance.get(`/users/${firebaseUID}`);
       setUsername(response.data.data?.username || "username");
       setAvatar(response.data.data?.avatarURL || null);
       console.debug("API response:", response.data);
@@ -88,7 +78,10 @@ export const Navbar = () => {
     >
       {!isMobile && (
         <button onClick={toggleNavbar} className="navbar-toggle">
-          {isExpanded ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
+          <ChevronRight
+            size={24}
+            className={isExpanded ? "arrow-icon rotated" : "arrow-icon"}
+          />
         </button>
       )}
 
@@ -112,7 +105,11 @@ export const Navbar = () => {
 
       <div className="navbar-bottom">
         <div className="navbar-user">
-          {avatar ? <img src={avatar} alt="User avatar" draggable="false"/> : <User size={24} />}
+          {avatar ? (
+            <img src={avatar} alt="User avatar" draggable="false" />
+          ) : (
+            <User size={24} />
+          )}
           {error && "Error fetching username"}
           {isExpanded && !isMobile && (
             <span className="navbar-text">{username}</span>
