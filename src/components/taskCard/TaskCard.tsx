@@ -1,4 +1,5 @@
 import "./TaskCard.css";
+import React from "react";
 
 type TaskProps = {
   title: string;
@@ -6,12 +7,10 @@ type TaskProps = {
   isActive: boolean;
 };
 
-export const TaskCard = (props: TaskProps) => {
+export const TaskCard = React.memo(({ title, isCompleted }: TaskProps) => {
   return (
     <div className="task-card">
-      <span className={props.isCompleted ? "task-completed" : ""}>
-        {props.title}
-      </span>
+      <span className={isCompleted ? "task-completed" : ""}>{title}</span>
     </div>
   );
-};
+});

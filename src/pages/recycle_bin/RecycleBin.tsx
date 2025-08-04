@@ -55,7 +55,7 @@ export const RecycleBin = () => {
       const response = await axiosInstance.patch(`/task/enable/${taskId}`);
       console.debug("API response:", response.data);
       setTaskRecovered(task);
-      await fetchData();
+      setData((prevData) => prevData.filter((item) => item._id !== taskId)); // en vez de fetchData, guardo el nuevo estado sin el task eliminado
     } catch (error: any) {
       console.debug("Error enabling task: ", error);
     }
@@ -72,7 +72,7 @@ export const RecycleBin = () => {
         `/task/${taskId}/${firebaseUID}`
       );
       setTaskDeleted(task);
-      await fetchData();
+      setData((prevData) => prevData.filter((item) => item._id !== taskId));
       console.debug("API response:", deleteResponse.data);
       setError(null);
     } catch (error: any) {

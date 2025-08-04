@@ -103,7 +103,8 @@ export const FoldersSidebar = ({
         JSON.stringify(response.data.data)
       );
 
-      await fetchData();
+      // await fetchData();
+      setData((prevData) => [...prevData, response.data.data]);
       resetFolderCreate();
       console.debug("API response:", response.data);
     } catch (error: any) {
@@ -124,7 +125,12 @@ export const FoldersSidebar = ({
       setFolderEdited(folder);
       setEditingFolder(null);
       resetFolderEdit();
-      await fetchData();
+      // await fetchData();
+      setData((prevData) =>
+        prevData.map((item) =>
+          item._id === folderId ? { ...item, title: folder.title } : item
+        )
+      );
     } catch (error: any) {
       setError(error.message || "Unknown error");
     }
@@ -142,7 +148,8 @@ export const FoldersSidebar = ({
       );
 
       setFolderDeleted(folder);
-      await fetchData();
+      // await fetchData();
+      setData((prevData) => prevData.filter((item) => item._id !== folderId));
       console.debug("API response:", deleteResponse.data);
       setError(null);
 

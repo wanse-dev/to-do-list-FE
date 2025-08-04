@@ -100,7 +100,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       }
       const response = await axiosInstance.post(`/task/`, sendData);
       setTaskAdded(response.data.data);
-      await fetchData();
+      setData((prevData) => [...prevData, response.data.data]); // en vez de fetchData, guardo el nuevo estado con la nueva tarea
       resetCreate();
       console.debug("API response:", response.data);
     } catch (error: any) {
@@ -119,7 +119,14 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       }
       const response = await axiosInstance.patch(endpoint);
       console.debug("API response:", response.data);
-      await fetchData();
+      // await fetchData();
+      setData((prevData) =>
+        prevData.map((item) =>
+          item._id === taskId
+            ? { ...item, isCompleted: !item.isCompleted }
+            : item
+        )
+      ); // en vez de fetchData, actualizo el estado de la tarea toggleada
     } catch (error: any) {
       setError(error.message || "Unknown error");
     }
@@ -134,7 +141,7 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       const response = await axiosInstance.patch(`/task/disable/${taskId}`);
       console.debug("API response:", response.data);
       setTaskDeleted(task);
-      await fetchData();
+      setData((prevData) => prevData.filter((item) => item._id !== taskId));
     } catch (error: any) {
       setError(error.message || "Unknown error");
     }
@@ -153,9 +160,13 @@ export const TasksSection = ({ selectedFolder }: TasksSectionProps) => {
       setTaskEdited(task);
       setEditingTask(null);
       resetEdit();
-      await fetchData();
+      setData((prevData) =>
+        prevData.map((item) =>
+          item._id === taskId ? { ...item, title: task.title } : item
+        )
+      ); // actualizo el estado localmente
     } catch (error: any) {
-      setError(error.message || "Unknown error");
+      setError(error.message || "Failed to edit task");
     }
   };
 
