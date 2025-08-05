@@ -44,21 +44,21 @@ react-toastify
 
 
 ## Entidades y relaciones:
-User
+### User
 
 Posee su propio array de Tasks y de Folders.
 
 Posee el UID de firebase, un username, un avatar, un email y un booleano isActive.
 
 
-Task
+### Task
 
 Posee un User creador y un Folder que lo contiene.
 
 Posee un title, dos booleanos: isCompleted e isActive.
 
 
-Folder
+### Folder
 
 Posee su propio array de Tasks.
 
@@ -67,7 +67,7 @@ Tiene un title.
 
 
 ## Endpoints y sus rutas:
-User:
+### User:
 
 createUser - (POST) http://localhost:3000/api/users/
 
@@ -84,7 +84,7 @@ enableUser - (PATCH) http://localhost:3000/api/users/enable/:firebaseUid
 deleteUser - (DELETE) http://localhost:3000/api/users/:firebaseUid
 
 
-Task:
+### Task:
 createTask - (POST) http://localhost:3000/api/task/
 
 getTasks - (GET) http://localhost:3000/api/task/
@@ -108,7 +108,7 @@ enableTask - (PATCH) http://localhost:3000/api/task/enable/:id
 deleteTask - (DELETE) http://localhost:3000/api/task/:id/:firebaseUid
 
 
-Folder:
+### Folder:
 createFolder - (POST) http://localhost:3000/api/folder/
 
 getFolders - (GET) http://localhost:3000/api/folder/
